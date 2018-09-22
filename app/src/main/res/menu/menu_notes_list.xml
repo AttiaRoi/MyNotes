@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mi_delete_notes"
+        android:icon="@drawable/ic_delete"
+        android:title="Delete Notes"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_add_note"
+        android:icon="@drawable/ic_add"
+        android:title="Add Note"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_insert_dummy_data"
+        android:title="Insert Dummy Data"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mi_delete_all_notes"
+        android:title="Delete All Notes"
+        app:showAsAction="never" />
+</menu>

@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,26 +13,43 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.NoteEntity;
 import roiattia.com.mynotes.ui.editnote.EditNoteActivity;
 import roiattia.com.mynotes.utils.DummyData;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 
 public class NotesListActivity extends AppCompatActivity
     implements NotesAdapter.OnNoteClick{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
-    @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
+
     private NotesAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
+
+    @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
+    @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
+    @BindView(R.id.fab_add_note) FloatingActionButton mAddNoteFab;
+    @BindView(R.id.btn_delete) Button mDeleteButton;
+    @BindView(R.id.btn_cancel) Button mCancelButton;
+
+    @OnClick(R.id.fab_add_note)
+    public void addNote(){
+        Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +60,23 @@ public class NotesListActivity extends AppCompatActivity
         setupRecyclerView();
 
         setupViewModel();
-    }
 
-    private void insertData(List<NoteEntity> notes){
-        mViewModel.insertData(notes);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDeleteLayout.setVisibility(GONE);
+                mAddNoteFab.setVisibility(VISIBLE);
+            }
+        });
     }
 
     private void setupViewModel() {
         Observer<List<NoteEntity>> observer = new Observer<List<NoteEntity>>() {
             @Override
             public void onChanged(@Nullable List<NoteEntity> noteEntities) {
-                for(NoteEntity noteEntity: noteEntities)
-                    Log.i(TAG, noteEntity.toString());
-                mNotesAdapter.setData(noteEntities);
+                if(noteEntities != null) {
+                    mNotesAdapter.setData(noteEntities);
+                }
             }
         };
 
@@ -78,31 +101,23 @@ public class NotesListActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.mi_add_note:
-                Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.mi_delete_notes:
-                Toast.makeText(this, "delete notes", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.mi_insert_dummy_data:
-                insertData(DummyData.getDummyData());
-                return true;
-            case R.id.mi_delete_all_notes:
-                mViewModel.deleteAllNotes();
+                setupLayout();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void setupLayout() {
+        mDeleteLayout.setVisibility(VISIBLE);
+        mAddNoteFab.setVisibility(GONE);
+        mDeleteButton.setEnabled(false);
+    }
+
     @Override
     public void onNoteClick(int noteIndex) {
-        Log.i(TAG, "note index: " + noteIndex);
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         intent.putExtra(NOTE_ID_KEY, noteIndex);
         startActivity(intent);
     }
-
-    //TODO: 2 - delete notes in notes list activity
-    //TODO: 3 - share note
 }

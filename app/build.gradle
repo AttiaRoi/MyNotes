@@ -42,4 +42,5 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterKnife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife_version"
 
+    implementation 'com.android.support:cardview-v7:27.1.1'
 }

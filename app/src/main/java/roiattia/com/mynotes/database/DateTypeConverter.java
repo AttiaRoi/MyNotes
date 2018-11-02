@@ -2,17 +2,17 @@ package roiattia.com.mynotes.database;
 
 import android.arch.persistence.room.TypeConverter;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
-public class DateTypeConverter {
+class DateTypeConverter {
 
     @TypeConverter
-    public static Date toDate(Long timeStamp){
-        return timeStamp == null ? null : new Date(timeStamp);
+    public static LocalDate toLocalDate(Long timeStamp){
+        return timeStamp == null ? null : new LocalDate(timeStamp);
     }
 
     @TypeConverter
-    public static Long toTimeStamp(Date date){
-        return date == null ? null : date.getTime();
+    public static Long toTimeStamp(LocalDate localDate){
+        return localDate == null ? null : localDate.toDate().getTime();
     }
 }

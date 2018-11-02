@@ -10,10 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ import butterknife.OnClick;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.NoteEntity;
 import roiattia.com.mynotes.ui.editnote.EditNoteActivity;
+import roiattia.com.mynotes.utils.TextFormat;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;

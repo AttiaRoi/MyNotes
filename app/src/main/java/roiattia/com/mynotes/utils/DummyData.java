@@ -29,9 +29,9 @@ public class DummyData {
 
     public static List<NoteEntity> getDummyData(){
         List<NoteEntity> notesList = new ArrayList<>();
-        for(int i = 0; i<mDummiesNumber ; i++){
-            notesList.add(new NoteEntity(getDate(i), mTexts[i]));
-        }
+//        for(int i = 0; i<mDummiesNumber ; i++){
+//            notesList.add(new NoteEntity(getDate(i), mTexts[i]));
+//        }
         return notesList;
     }
 }

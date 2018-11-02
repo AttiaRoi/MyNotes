@@ -7,8 +7,8 @@ import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(entities = {NoteEntity.class}, version = 3)
-@TypeConverters({DateTypeConverter.class})
+@Database(entities = {NoteEntity.class}, version = 6)
+@TypeConverters({DateTypeConverter.class, TimeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();

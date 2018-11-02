@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 import java.util.Date;
 
 import roiattia.com.mynotes.database.AppExecutors;
@@ -42,16 +45,12 @@ public class EditNoteViewModel extends AndroidViewModel {
     }
 
     public void saveNote(String noteText) {
-        NoteEntity noteEntity = mMutableLiveNote.getValue();
-        if(noteEntity == null){
-            if(TextUtils.isEmpty(noteText.trim())){
-                return;
-            }
-            noteEntity = new NoteEntity(new Date(), noteText.trim());
-        } else {
-            noteEntity.setText(noteText);
+        NoteEntity existingNote = mMutableLiveNote.getValue();
+        NoteEntity newNote = new NoteEntity(new LocalDate(), new LocalTime(), noteText.trim());
+        if(existingNote != null){
+            newNote.setId(existingNote.getId());
         }
-        mRepository.insertNote(noteEntity);
+        mRepository.insertNote(newNote);
     }
 
     public void deleteNote() {

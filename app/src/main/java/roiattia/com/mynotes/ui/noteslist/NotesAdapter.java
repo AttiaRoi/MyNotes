@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.utils.TextFormat;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -78,7 +79,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
         final NoteEntity note = mNotesList.get(position);
         holder.mNoteTextView.setText(note.getText());
-        holder.mNoteDateView.setText(note.getDate().toString());
+        holder.mNoteDateView.setText(String.format("Last edited at: %s - %s",
+                TextFormat.getDateStringFormat(note.getDate()),
+                TextFormat.getTimeStringFormat(note.getTime())));
         // check mShowCheckBoxes, if true then show check boxes and uncheck them
         if(mShowCheckBoxes) {
             holder.mCheckBox.setVisibility(VISIBLE);

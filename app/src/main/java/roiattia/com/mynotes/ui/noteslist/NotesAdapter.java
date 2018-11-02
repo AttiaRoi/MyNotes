@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,11 +17,15 @@ import butterknife.ButterKnife;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.NoteEntity;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
 
     private Context mContext;
     private List<NoteEntity> mNotesList;
     private OnNoteClick mClickListener;
+    private boolean mShowCheckBoxes;
 
     NotesAdapter(Context context, OnNoteClick clickListener) {
         mContext = context;
@@ -27,10 +33,35 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     public interface OnNoteClick{
+        /**
+         * Pass the index of the note clicked back to the listener
+         * @param index the clicked note index
+         */
         void onNoteClick(int index);
+
+        /**
+         * Pass the note that was checked and if it was checked or unchecked for
+         * deletion purposes
+         * @param noteEntity the note item
+         * @param addForDeletion the checkbox check status
+         */
+        void onCheckBoxChecked(NoteEntity noteEntity, boolean addForDeletion);
     }
 
-    public void setData(List<NoteEntity> notesList){
+    /**
+     * Set the checkboxes visibility status
+     * @param showCheckBoxes true to show, false to hide
+     */
+    public void setShowCheckBoxes(boolean showCheckBoxes){
+        mShowCheckBoxes = showCheckBoxes;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Set the notes list for the recycler view to show
+     * @param notesList items to show in recycler view
+     */
+    public void setNotesList(List<NoteEntity> notesList){
         mNotesList = notesList;
         notifyDataSetChanged();
     }
@@ -44,9 +75,28 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        holder.mNoteTextView.setText(mNotesList.get(position).getText());
-        holder.mNoteDateView.setText(mNotesList.get(position).getDate().toString());
+    public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
+        final NoteEntity note = mNotesList.get(position);
+        holder.mNoteTextView.setText(note.getText());
+        holder.mNoteDateView.setText(note.getDate().toString());
+        // check mShowCheckBoxes, if true then show check boxes and uncheck them
+        if(mShowCheckBoxes) {
+            holder.mCheckBox.setVisibility(VISIBLE);
+            holder.mCheckBox.setChecked(false);
+        } else {
+            holder.mCheckBox.setVisibility(GONE);
+        }
+        // set checkbox on check listener
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    mClickListener.onCheckBoxChecked(note, true);
+                } else {
+                    mClickListener.onCheckBoxChecked(note, false);
+                }
+            }
+        });
     }
 
     @Override
@@ -59,6 +109,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         @BindView(R.id.tv_note_text) TextView mNoteTextView;
         @BindView(R.id.tv_note_date) TextView mNoteDateView;
+        @BindView(R.id.checkBox) CheckBox mCheckBox;
 
         NotesViewHolder(View itemView) {
             super(itemView);

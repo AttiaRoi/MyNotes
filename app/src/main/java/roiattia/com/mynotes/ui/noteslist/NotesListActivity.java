@@ -10,13 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,7 +24,6 @@ import butterknife.OnClick;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.NoteEntity;
 import roiattia.com.mynotes.ui.editnote.EditNoteActivity;
-import roiattia.com.mynotes.utils.DummyData;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -38,6 +36,7 @@ public class NotesListActivity extends AppCompatActivity
 
     private NotesAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
+    private List<NoteEntity> mNotesForDeletion;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
     @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
@@ -57,6 +56,8 @@ public class NotesListActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes_list);
         ButterKnife.bind(this);
 
+        mNotesForDeletion = new ArrayList<>();
+
         setupRecyclerView();
 
         setupViewModel();
@@ -66,6 +67,15 @@ public class NotesListActivity extends AppCompatActivity
             public void onClick(View v) {
                 mDeleteLayout.setVisibility(GONE);
                 mAddNoteFab.setVisibility(VISIBLE);
+                mNotesAdapter.setShowCheckBoxes(false);
+            }
+        });
+
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.deleteNotes(mNotesForDeletion);
+                mNotesAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -75,7 +85,7 @@ public class NotesListActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<NoteEntity> noteEntities) {
                 if(noteEntities != null) {
-                    mNotesAdapter.setData(noteEntities);
+                    mNotesAdapter.setNotesList(noteEntities);
                 }
             }
         };
@@ -109,6 +119,7 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     private void setupLayout() {
+        mNotesAdapter.setShowCheckBoxes(true);
         mDeleteLayout.setVisibility(VISIBLE);
         mAddNoteFab.setVisibility(GONE);
         mDeleteButton.setEnabled(false);
@@ -119,5 +130,17 @@ public class NotesListActivity extends AppCompatActivity
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         intent.putExtra(NOTE_ID_KEY, noteIndex);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCheckBoxChecked(NoteEntity noteEntity, boolean addForDeletion) {
+        if(addForDeletion){
+            mNotesForDeletion.add(noteEntity);
+        } else {
+            mNotesForDeletion.remove(noteEntity);
+        }
+        if(mNotesForDeletion.size() > 0){
+            mDeleteButton.setEnabled(true);
+        }
     }
 }

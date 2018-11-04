@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/et_user_input"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/regular_horizontal_margin"
+    android:hint="@string/new_folder_dialog_example_17"
+    android:inputType="text">
+
+</EditText>

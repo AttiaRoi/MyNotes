@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import roiattia.com.mynotes.database.AppDatabase;
-import roiattia.com.mynotes.database.NoteDao;
+import roiattia.com.mynotes.database.note.NoteDao;
 import roiattia.com.mynotes.utils.DummyData;
 
 import static org.junit.Assert.*;

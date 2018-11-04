@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.database;
+package roiattia.com.mynotes.database.repositories;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
@@ -6,26 +6,28 @@ import android.util.Log;
 
 import java.util.List;
 
-import roiattia.com.mynotes.utils.DummyData;
+import roiattia.com.mynotes.database.AppDatabase;
+import roiattia.com.mynotes.database.AppExecutors;
+import roiattia.com.mynotes.database.note.NoteEntity;
 
-public class AppRepository {
+public class NotesRepository {
 
-    private static final String TAG = AppRepository.class.getSimpleName();
+    private static final String TAG = NotesRepository.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static AppRepository sInstance;
+    private static NotesRepository sInstance;
     private AppDatabase mDatabase;
     private AppExecutors mExecutors;
 
-    public static AppRepository getInstance(Context context) {
+    public static NotesRepository getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new AppRepository(context);
+                sInstance = new NotesRepository(context);
             }
         }
         return sInstance;
     }
 
-    private AppRepository(Context context) {
+    private NotesRepository(Context context) {
         mDatabase = AppDatabase.getsInstance(context);
         mExecutors = AppExecutors.getInstance();
     }

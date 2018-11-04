@@ -4,28 +4,24 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
-import java.util.Date;
-
 import roiattia.com.mynotes.database.AppExecutors;
-import roiattia.com.mynotes.database.AppRepository;
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.repositories.NotesRepository;
+import roiattia.com.mynotes.database.note.NoteEntity;
 
 public class EditNoteViewModel extends AndroidViewModel {
 
     private static final String TAG = EditNoteViewModel.class.getSimpleName();
     private MutableLiveData<NoteEntity> mMutableLiveNote;
-    private AppRepository mRepository;
+    private NotesRepository mRepository;
     private AppExecutors mExecutors;
 
     public EditNoteViewModel(@NonNull Application application) {
         super(application);
-        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        mRepository = NotesRepository.getInstance(application.getApplicationContext());
         mExecutors = AppExecutors.getInstance();
         mMutableLiveNote = new MutableLiveData<>();
     }

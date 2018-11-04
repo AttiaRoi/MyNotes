@@ -7,17 +7,17 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import roiattia.com.mynotes.database.AppRepository;
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.repositories.NotesRepository;
+import roiattia.com.mynotes.database.note.NoteEntity;
 
 public class NotesListViewModel extends AndroidViewModel {
 
-    private AppRepository mRepository;
+    private NotesRepository mRepository;
     private LiveData<List<NoteEntity>> mNotesList;
 
     public NotesListViewModel(@NonNull Application application) {
         super(application);
-        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        mRepository = NotesRepository.getInstance(application.getApplicationContext());
         mNotesList = mRepository.getNotes();
     }
 

@@ -3,11 +3,15 @@ package roiattia.com.mynotes.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(entities = {NoteEntity.class}, version = 6)
+import roiattia.com.mynotes.database.folder.FolderDao;
+import roiattia.com.mynotes.database.folder.FolderEntity;
+import roiattia.com.mynotes.database.note.NoteDao;
+import roiattia.com.mynotes.database.note.NoteEntity;
+
+@Database(entities = {NoteEntity.class, FolderEntity.class}, version = 7)
 @TypeConverters({DateTypeConverter.class, TimeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -28,5 +32,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract NoteDao noteDao();
+
+    public abstract FolderDao folderDao();
 
 }

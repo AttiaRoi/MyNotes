@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import roiattia.com.mynotes.R;
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.utils.TextFormat;
 
 import static android.view.View.GONE;

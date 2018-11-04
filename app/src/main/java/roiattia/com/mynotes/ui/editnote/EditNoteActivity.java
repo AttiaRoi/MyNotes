@@ -9,6 +9,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,8 +17,9 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import roiattia.com.mynotes.R;
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.note.NoteEntity;
 
 import static roiattia.com.mynotes.utils.Constants.EDITING_MODE_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
@@ -25,10 +27,17 @@ import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 public class EditNoteActivity extends AppCompatActivity {
 
     private static final String TAG = EditNoteActivity.class.getSimpleName();
-    @BindView(R.id.tv_note_text) EditText mNoteText;
+
     private EditNoteViewModel mViewModel;
     private boolean mIsNewNote, mIsEditing;
     private AlertDialog mDeleteNoteDialog;
+
+    @BindView(R.id.tv_note_text) EditText mNoteText;
+
+    @OnClick(R.id.cv_add_to_folder)
+    public void addNoteToFolder(){
+        Toast.makeText(this, "note to folder", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

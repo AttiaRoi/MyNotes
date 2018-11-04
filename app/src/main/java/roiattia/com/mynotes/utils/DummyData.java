@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.note.NoteEntity;
 
 public class DummyData {
 

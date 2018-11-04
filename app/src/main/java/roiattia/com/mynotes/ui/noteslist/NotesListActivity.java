@@ -10,13 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import org.joda.time.LocalTime;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import roiattia.com.mynotes.R;
-import roiattia.com.mynotes.database.NoteEntity;
+import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.ui.editnote.EditNoteActivity;
-import roiattia.com.mynotes.utils.TextFormat;
+import roiattia.com.mynotes.ui.folderslist.FoldersActivity;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -47,6 +46,7 @@ public class NotesListActivity extends AppCompatActivity
     @BindView(R.id.fab_add_note) FloatingActionButton mAddNoteFab;
     @BindView(R.id.btn_delete) Button mDeleteButton;
     @BindView(R.id.btn_cancel) Button mCancelButton;
+    @BindView(R.id.tv_empty_list) TextView mEmptyListMessage;
 
     @OnClick(R.id.fab_add_note)
     public void addNote(){
@@ -66,12 +66,14 @@ public class NotesListActivity extends AppCompatActivity
 
         setupViewModel();
 
+        setupUI();
+    }
+
+    private void setupUI() {
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDeleteLayout.setVisibility(GONE);
-                mAddNoteFab.setVisibility(VISIBLE);
-                mNotesAdapter.setShowCheckBoxes(false);
+                setupLayout(false);
             }
         });
 
@@ -80,6 +82,7 @@ public class NotesListActivity extends AppCompatActivity
             public void onClick(View v) {
                 mViewModel.deleteNotes(mNotesForDeletion);
                 mNotesAdapter.notifyDataSetChanged();
+                setupLayout(false);
             }
         });
     }
@@ -90,6 +93,11 @@ public class NotesListActivity extends AppCompatActivity
             public void onChanged(@Nullable List<NoteEntity> noteEntities) {
                 if(noteEntities != null) {
                     mNotesAdapter.setNotesList(noteEntities);
+                    if(noteEntities.size() > 0){
+                        mEmptyListMessage.setVisibility(GONE);
+                    } else {
+                        mEmptyListMessage.setVisibility(VISIBLE);
+                    }
                 }
             }
         };
@@ -116,17 +124,35 @@ public class NotesListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.mi_delete_notes:
-                setupLayout();
+                setupLayout(true);
+                return true;
+            case R.id.mi_folders:
+                openFoldersActivity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupLayout() {
-        mNotesAdapter.setShowCheckBoxes(true);
-        mDeleteLayout.setVisibility(VISIBLE);
-        mAddNoteFab.setVisibility(GONE);
-        mDeleteButton.setEnabled(false);
+    private void openFoldersActivity() {
+        Intent intent = new Intent(NotesListActivity.this, FoldersActivity.class);
+        startActivity(intent);
+    }
+
+    private void setupLayout(boolean showLayout) {
+        if(showLayout) {
+            if (mNotesAdapter.getItemCount() > 0) {
+                mNotesAdapter.setShowCheckBoxes(true);
+                mDeleteLayout.setVisibility(VISIBLE);
+                mAddNoteFab.setVisibility(GONE);
+                mDeleteButton.setEnabled(false);
+            } else {
+                Toast.makeText(this, "No notes to delete", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            mDeleteLayout.setVisibility(GONE);
+            mAddNoteFab.setVisibility(VISIBLE);
+            mNotesAdapter.setShowCheckBoxes(false);
+        }
     }
 
     @Override

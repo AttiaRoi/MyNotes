@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_delete"
         android:title="Delete Notes"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_folders"
+        android:icon="@drawable/ic_folder_white_24dp"
+        android:title="Folders"
+        app:showAsAction="ifRoom" />
 </menu>

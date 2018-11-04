@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.database;
+package roiattia.com.mynotes.database.note;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

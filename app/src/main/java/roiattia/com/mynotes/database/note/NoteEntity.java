@@ -1,6 +1,8 @@
 package roiattia.com.mynotes.database.note;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -9,7 +11,15 @@ import org.joda.time.LocalTime;
 
 import java.util.Date;
 
-@Entity(tableName = "note")
+import roiattia.com.mynotes.database.folder.FolderEntity;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "note",
+        foreignKeys = @ForeignKey(entity = FolderEntity.class,
+        parentColumns = "id",
+        childColumns = "folder_id",
+        onDelete = CASCADE))
 public class NoteEntity {
 
     @PrimaryKey(autoGenerate = true)
@@ -17,6 +27,8 @@ public class NoteEntity {
     private LocalDate date;
     private LocalTime time;
     private String text;
+    @ColumnInfo(name = "folder_id")
+    private Long folderId;
 
     @Ignore
     public NoteEntity() { }
@@ -28,11 +40,20 @@ public class NoteEntity {
         this.text = text;
     }
 
-    public NoteEntity(int id, LocalDate date, LocalTime time, String text) {
+    public NoteEntity(int id, LocalDate date, LocalTime time, String text, Long folderId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.text = text;
+        this.folderId = folderId;
+    }
+
+    public Long getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
     }
 
     public LocalTime getTime() {
@@ -72,7 +93,9 @@ public class NoteEntity {
         return "NoteEntity{" +
                 "id=" + id +
                 ", date=" + date +
+                ", time=" + time +
                 ", text='" + text + '\'' +
+                ", folderId=" + folderId +
                 '}';
     }
 }

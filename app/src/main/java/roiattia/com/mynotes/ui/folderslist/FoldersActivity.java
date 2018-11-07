@@ -15,8 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import roiattia.com.mynotes.model.FolderListItem;
 import roiattia.com.mynotes.R;
-import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.ui.dialogs.EditTextDialog;
 
 import static android.view.View.GONE;
@@ -54,9 +54,9 @@ public class FoldersActivity extends AppCompatActivity
     }
 
     private void setupViewModel(){
-        Observer<List<FolderEntity>> observer = new Observer<List<FolderEntity>>() {
+        Observer<List<FolderListItem>> observer = new Observer<List<FolderListItem>>() {
             @Override
-            public void onChanged(@Nullable List<FolderEntity> folderEntities) {
+            public void onChanged(@Nullable List<FolderListItem> folderEntities) {
                 if(folderEntities != null){
                     mFoldersAdapter.setFoldersList(folderEntities);
                     if(folderEntities.size() > 0){

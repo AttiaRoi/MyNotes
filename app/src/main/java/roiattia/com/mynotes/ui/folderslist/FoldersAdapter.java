@@ -14,16 +14,16 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import roiattia.com.mynotes.model.FolderListItem;
 import roiattia.com.mynotes.R;
-import roiattia.com.mynotes.database.folder.FolderEntity;
 
 public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesViewHolder> {
 
     private Context mContext;
-    private List<FolderEntity> mFoldersList;
+    private List<FolderListItem> mFoldersList;
     private OnFolderClick mClickListener;
 
-    FoldersAdapter(Context context, OnFolderClick clickListener) {
+    public FoldersAdapter(Context context, OnFolderClick clickListener) {
         mContext = context;
         mClickListener = clickListener;
     }
@@ -40,7 +40,7 @@ public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesVie
      * Set the notes list for the recycler view to show
      * @param foldersList items to show in recycler view
      */
-    public void setFoldersList(List<FolderEntity> foldersList){
+    public void setFoldersList(List<FolderListItem> foldersList){
         mFoldersList = foldersList;
         notifyDataSetChanged();
     }
@@ -55,7 +55,7 @@ public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesVie
 
     @Override
     public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
-        final FolderEntity folder = mFoldersList.get(position);
+        final FolderListItem folder = mFoldersList.get(position);
         holder.mName.setText(folder.getName());
         int notesCount = folder.getNotesCount();
         holder.mNotesCount.setText(String.format(Locale.getDefault(),

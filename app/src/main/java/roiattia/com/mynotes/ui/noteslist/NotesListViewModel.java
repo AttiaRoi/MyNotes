@@ -12,28 +12,28 @@ import roiattia.com.mynotes.database.note.NoteEntity;
 
 public class NotesListViewModel extends AndroidViewModel {
 
-    private NotesRepository mRepository;
-    private LiveData<List<NoteEntity>> mNotesList;
+    private NotesRepository mNotesRepository;
+    private LiveData<List<NoteEntity>> mNotesLiveData;
 
     public NotesListViewModel(@NonNull Application application) {
         super(application);
-        mRepository = NotesRepository.getInstance(application.getApplicationContext());
-        mNotesList = mRepository.getNotes();
+        mNotesRepository = NotesRepository.getInstance(application.getApplicationContext());
+        mNotesLiveData = mNotesRepository.getNotes();
     }
 
-    public LiveData<List<NoteEntity>> getNotesList(){
-        return mNotesList;
+    public LiveData<List<NoteEntity>> getNotesLiveData(){
+        return mNotesLiveData;
     }
 
     public void insertData(List<NoteEntity> notes) {
-        mRepository.insertNotes(notes);
+        mNotesRepository.insertNotes(notes);
     }
 
     public void deleteAllNotes() {
-        mRepository.deleteAllNotes();
+        mNotesRepository.deleteAllNotes();
     }
 
     public void deleteNotes(List<NoteEntity> notesForDeletion) {
-        mRepository.deleteNotes(notesForDeletion);
+        mNotesRepository.deleteNotes(notesForDeletion);
     }
 }

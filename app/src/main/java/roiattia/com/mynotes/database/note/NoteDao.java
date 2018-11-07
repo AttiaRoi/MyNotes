@@ -9,6 +9,8 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import roiattia.com.mynotes.model.NoteItem;
+
 @Dao
 public interface NoteDao {
 
@@ -33,6 +35,15 @@ public interface NoteDao {
     @Query("SELECT COUNT(*) FROM note")
     int getNotesCount();
 
+    @Query("SELECT note.id AS id, note.date AS date, note.time AS time, note.text AS text, " +
+            "folder.name AS folderName, folder.id AS folderId FROM note JOIN folder on :folderId = folder.id " +
+            "WHERE note.id = :id")
+    NoteItem getNoteItemById(int id, long folderId);
+
     @Delete
     void deleteNotes(List<NoteEntity> notesForDeletion);
+
+    @Query("DELETE FROM note WHERE id = :id")
+    void deleteNoteById(long id);
+
 }

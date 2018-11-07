@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import roiattia.com.mynotes.model.NoteItem;
 import roiattia.com.mynotes.database.AppDatabase;
 import roiattia.com.mynotes.database.AppExecutors;
 import roiattia.com.mynotes.database.note.NoteEntity;
@@ -82,6 +83,19 @@ public class NotesRepository {
             @Override
             public void run() {
                 mDatabase.noteDao().deleteNotes(notesForDeletion);
+            }
+        });
+    }
+
+    public NoteItem getNoteItemById(int noteId, long folderId) {
+        return mDatabase.noteDao().getNoteItemById(noteId, folderId);
+    }
+
+    public void deleteNoteById(final int id) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.noteDao().deleteNoteById(id);
             }
         });
     }

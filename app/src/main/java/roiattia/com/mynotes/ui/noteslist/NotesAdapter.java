@@ -3,6 +3,7 @@ package roiattia.com.mynotes.ui.noteslist;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
          * Pass the index of the note clicked back to the listener
          * @param index the clicked note index
          */
-        void onNoteClick(int index);
+        void onNoteClick(int index, Long folderId);
 
         /**
          * Pass the note that was checked and if it was checked or unchecked for
@@ -123,7 +124,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            mClickListener.onNoteClick(mNotesList.get(position).getId());
+            mClickListener.onNoteClick(mNotesList.get(position).getId(),
+                    mNotesList.get(position).getFolderId());
         }
     }
 }

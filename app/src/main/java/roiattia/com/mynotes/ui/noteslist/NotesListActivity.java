@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import roiattia.com.mynotes.ui.folderslist.FoldersActivity;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 
 public class NotesListActivity extends AppCompatActivity
@@ -103,7 +105,7 @@ public class NotesListActivity extends AppCompatActivity
         };
 
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
-        mViewModel.getNotesList().observe(this, observer);
+        mViewModel.getNotesLiveData().observe(this, observer);
     }
 
     private void setupRecyclerView() {
@@ -156,9 +158,11 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNoteClick(int noteIndex) {
+    public void onNoteClick(int noteIndex, Long folderId) {
+        Log.i(TAG, "onNoteClick note index: " + noteIndex);
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         intent.putExtra(NOTE_ID_KEY, noteIndex);
+        intent.putExtra(FOLDER_ID_KEY, folderId);
         startActivity(intent);
     }
 

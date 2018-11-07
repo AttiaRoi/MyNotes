@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
+import roiattia.com.mynotes.model.FolderListItem;
 import roiattia.com.mynotes.database.AppDatabase;
 import roiattia.com.mynotes.database.AppExecutors;
 import roiattia.com.mynotes.database.folder.FolderEntity;
@@ -18,6 +19,10 @@ public class FoldersRepository {
     private static FoldersRepository sInstance;
     private AppDatabase mDatabase;
     private AppExecutors mExecutors;
+
+    public interface FoldersRepositoryListener{
+        void onFolderInserted(long id);
+    }
 
     public static FoldersRepository getInstance(Context context) {
         if (sInstance == null) {
@@ -33,9 +38,10 @@ public class FoldersRepository {
         mExecutors = AppExecutors.getInstance();
     }
 
-    public LiveData<List<FolderEntity>> getFolders() {
-        return mDatabase.folderDao().getAllFolders();
+    public LiveData<List<FolderListItem>> getFoldersItems() {
+        return mDatabase.folderDao().getAllFoldersItems();
     }
+
 
     public void insertFolder(final String input) {
         mExecutors.diskIO().execute(new Runnable() {
@@ -45,5 +51,19 @@ public class FoldersRepository {
                 mDatabase.folderDao().insertFolder(folder);
             }
         });
+    }
+    public void insertFolder(final String input, final FoldersRepositoryListener listener) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                FolderEntity folder = new FolderEntity(new LocalDate(), input, 0);
+                long id = mDatabase.folderDao().insertFolderWithCallback(folder);
+                listener.onFolderInserted(id);
+            }
+        });
+    }
+
+    public LiveData<List<FolderEntity>> getFolders() {
+        return mDatabase.folderDao().getAllFolders();
     }
 }

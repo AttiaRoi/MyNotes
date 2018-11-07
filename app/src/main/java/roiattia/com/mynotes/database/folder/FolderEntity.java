@@ -10,12 +10,12 @@ import org.joda.time.LocalDate;
 public class FolderEntity {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private LocalDate date;
     private String name;
     private int notesCount;
 
-    public FolderEntity(int id, LocalDate date, String name, int notesCount) {
+    public FolderEntity(long id, LocalDate date, String name, int notesCount) {
         this.id = id;
         this.date = date;
         this.name = name;
@@ -37,11 +37,11 @@ public class FolderEntity {
         this.notesCount = notesCount;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

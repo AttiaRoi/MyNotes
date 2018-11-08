@@ -5,4 +5,19 @@
     <string name="dialog_confirm">confirm</string>
     <string name="dialog_cancel">cancel</string>
     <string name="new_folder_dialog_example_17">Example: Recipes</string>
+
+    <!-- NotesListActivity -->
+    <string name="no_notes_to_delete_message">No notes to delete</string>
+
+    <!-- EditNoteActivity -->
+    <string name="delete_note_dialog_title">Delete Note?</string>
+    <string name="note_deleted_toast_message">Note deleted successfully!</string>
+    <string name="note_saved_toast_message">Note saved successfully!</string>
+    <string name="note_edited_toast_message">Note edited successfully!</string>
+    <string name="note_is_empty_toast_message">Note is empty…</string>
+    <string name="add_note_to_folder_text">Add note to folder</string>
+    <string name="folder_name_required_toast_message">Folder name required</string>
+
+    <!-- FoldersListActivity -->
+    <string name="folder_activity_title">My Folders</string>
 </resources>

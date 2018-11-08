@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.ui.editnote;
+package roiattia.com.mynotes.ui.note;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,14 +13,14 @@ import java.util.List;
 
 import roiattia.com.mynotes.database.folder.FolderEntity;
 
-public class FoldersDialog extends DialogFragment {
+public class PickFolderDialog extends DialogFragment {
 
-    private static final String TAG = FoldersDialog.class.getSimpleName();
+    private static final String TAG = PickFolderDialog.class.getSimpleName();
     private String[] mFoldersNames;
     private List<FolderEntity> mFolders;
-    private FoldersDialogCallback mListener;
+    private FoldersDialogListener mListener;
 
-    public interface FoldersDialogCallback {
+    public interface FoldersDialogListener {
         void onFolderPicked(FolderEntity folder);
         void onRemoveFromFolder();
         void onCreateNewFolder();
@@ -70,12 +70,12 @@ public class FoldersDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            // Instantiate the FoldersDialogCallback to send events to the host
-            mListener = (FoldersDialogCallback) context;
+            // Instantiate the FoldersDialogListener to send events to the host
+            mListener = (FoldersDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement FoldersDialogCallback");
+                    + " must implement FoldersDialogListener");
         }
     }
 }

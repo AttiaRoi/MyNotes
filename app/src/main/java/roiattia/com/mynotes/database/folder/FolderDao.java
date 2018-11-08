@@ -24,7 +24,7 @@ public interface FolderDao {
     void deleteFolder(FolderEntity folderEntity);
 
     @Query("SELECT * FROM folder WHERE id = :id")
-    FolderEntity getFolderById(int id);
+    FolderEntity getFolderById(long id);
 
     @Query("SELECT * FROM folder")
     LiveData<List<FolderEntity>> getAllFolders();

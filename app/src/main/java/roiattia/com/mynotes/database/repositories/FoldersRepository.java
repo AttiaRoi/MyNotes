@@ -21,7 +21,7 @@ public class FoldersRepository {
     private AppExecutors mExecutors;
 
     public interface FoldersRepositoryListener{
-        void onFolderInserted(long id);
+        void onFolderInserted(FolderEntity folder);
     }
 
     public static FoldersRepository getInstance(Context context) {
@@ -33,15 +33,20 @@ public class FoldersRepository {
         return sInstance;
     }
 
+
+
     private FoldersRepository(Context context) {
         mDatabase = AppDatabase.getsInstance(context);
         mExecutors = AppExecutors.getInstance();
     }
 
+    public FolderEntity getFolderById(long folderId) {
+        return mDatabase.folderDao().getFolderById(folderId);
+    }
+
     public LiveData<List<FolderListItem>> getFoldersItems() {
         return mDatabase.folderDao().getAllFoldersItems();
     }
-
 
     public void insertFolder(final String input) {
         mExecutors.diskIO().execute(new Runnable() {
@@ -58,7 +63,8 @@ public class FoldersRepository {
             public void run() {
                 FolderEntity folder = new FolderEntity(new LocalDate(), input, 0);
                 long id = mDatabase.folderDao().insertFolderWithCallback(folder);
-                listener.onFolderInserted(id);
+                folder.setId(id);
+                listener.onFolderInserted(folder);
             }
         });
     }

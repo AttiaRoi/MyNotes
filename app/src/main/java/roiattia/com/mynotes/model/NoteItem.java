@@ -10,9 +10,9 @@ public class NoteItem {
     private LocalTime time;
     private String text;
     private String folderName;
-    private long folderId;
+    private Long folderId;
 
-    public NoteItem(int id, LocalDate date, LocalTime time, String text, String folderName, long folderId) {
+    public NoteItem(int id, LocalDate date, LocalTime time, String text, String folderName, Long folderId) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -21,11 +21,11 @@ public class NoteItem {
         this.folderId = folderId;
     }
 
-    public long getFolderId() {
+    public Long getFolderId() {
         return folderId;
     }
 
-    public void setFolderId(long folderId) {
+    public void setFolderId(Long folderId) {
         this.folderId = folderId;
     }
 

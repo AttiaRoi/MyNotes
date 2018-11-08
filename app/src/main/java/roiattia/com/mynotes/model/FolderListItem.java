@@ -3,20 +3,20 @@ package roiattia.com.mynotes.model;
 public class FolderListItem {
 
     private String mName;
-    private int mId;
+    private long mId;
     private int mNotesCount;
 
-    public FolderListItem(String name, int id, int notesCount) {
+    public FolderListItem(String name, long id, int notesCount) {
         mName = name;
         mId = id;
         mNotesCount = notesCount;
     }
 
-    public int getId() {
+    public long getId() {
         return mId;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         mId = id;
     }
 

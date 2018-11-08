@@ -17,13 +17,13 @@ import butterknife.ButterKnife;
 import roiattia.com.mynotes.model.FolderListItem;
 import roiattia.com.mynotes.R;
 
-public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesViewHolder> {
+public class FoldersListAdapter extends RecyclerView.Adapter<FoldersListAdapter.NotesViewHolder> {
 
     private Context mContext;
     private List<FolderListItem> mFoldersList;
     private OnFolderClick mClickListener;
 
-    public FoldersAdapter(Context context, OnFolderClick clickListener) {
+    public FoldersListAdapter(Context context, OnFolderClick clickListener) {
         mContext = context;
         mClickListener = clickListener;
     }
@@ -56,6 +56,7 @@ public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesVie
     @Override
     public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
         final FolderListItem folder = mFoldersList.get(position);
+        holder.itemView.setTag(folder.getId());
         holder.mName.setText(folder.getName());
         int notesCount = folder.getNotesCount();
         holder.mNotesCount.setText(String.format(Locale.getDefault(),
@@ -88,7 +89,7 @@ public class FoldersAdapter extends RecyclerView.Adapter<FoldersAdapter.NotesVie
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            mClickListener.onFolderClick(mFoldersList.get(position).getId());
+            mClickListener.onFolderClick(position);
         }
     }
 }

@@ -26,8 +26,10 @@ public interface NoteDao {
     @Query("DELETE FROM note")
     int deleteAllNotes();
 
-    @Query("SELECT * FROM note WHERE id = :id")
-    NoteEntity getNoteById(int id);
+    @Query("SELECT note.id AS id, note.date AS date, note.time AS time, note.text AS text, " +
+            "folder.name AS folderName, folder.id AS folderId FROM note LEFT JOIN folder on " +
+            "note.folder_id = folder.id WHERE note.id =:id")
+    NoteItem getNoteById(long id);
 
     @Query("SELECT * FROM note ORDER BY date DESC")
     LiveData<List<NoteEntity>> getAllNotes();
@@ -46,4 +48,6 @@ public interface NoteDao {
     @Query("DELETE FROM note WHERE id = :id")
     void deleteNoteById(long id);
 
+    @Query("SELECT * FROM note WHERE folder_id=:folderId ORDER BY date DESC")
+    LiveData<List<NoteEntity>> getNotesByFolderId(long folderId);
 }

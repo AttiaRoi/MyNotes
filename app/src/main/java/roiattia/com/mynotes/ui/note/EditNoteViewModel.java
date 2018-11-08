@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.ui.editnote;
+package roiattia.com.mynotes.ui.note;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -23,7 +23,7 @@ public class EditNoteViewModel extends AndroidViewModel {
     private FoldersRepository mFoldersRepository;
     private AppExecutors mExecutors;
     private MutableLiveData<NoteItem> mMutableLiveNote;
-    private MutableLiveData<NoteEntity> mMutableLiveNoteEntity;
+    private MutableLiveData<FolderEntity> mMutableLiveFolder;
 
     public EditNoteViewModel(@NonNull Application application) {
         super(application);
@@ -31,19 +31,40 @@ public class EditNoteViewModel extends AndroidViewModel {
         mFoldersRepository = FoldersRepository.getInstance(application.getApplicationContext());
         mExecutors = AppExecutors.getInstance();
         mMutableLiveNote = new MutableLiveData<>();
-        mMutableLiveNoteEntity = new MutableLiveData<>();
+        mMutableLiveFolder = new MutableLiveData<>();
     }
 
-    public LiveData<List<FolderEntity>> getFoldersLiveData() {
-        return mFoldersRepository.getFolders();
+
+    public void loadFolder(final long folderId) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                FolderEntity folder = mFoldersRepository.getFolderById(folderId);
+                mMutableLiveFolder.postValue(folder);
+            }
+        });
+    }
+
+    public MutableLiveData<FolderEntity> getMutableLiveFolder() {
+        return mMutableLiveFolder;
+    }
+
+    public void loadNote(final long noteId){
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                NoteItem NoteItem = mNotesRepository.getNoteById(noteId);
+                mMutableLiveNote.postValue(NoteItem);
+            }
+        });
     }
 
     public MutableLiveData<NoteItem> getMutableLiveNote(){
         return mMutableLiveNote;
     }
 
-    public MutableLiveData<NoteEntity> getMutableLiveNoteEntity() {
-        return mMutableLiveNoteEntity;
+    public LiveData<List<FolderEntity>> getFoldersLiveData() {
+        return mFoldersRepository.getFolders();
     }
 
     public void saveNote(NoteEntity note) {
@@ -59,25 +80,5 @@ public class EditNoteViewModel extends AndroidViewModel {
 
     public void inertNewFolder(String input, FoldersRepository.FoldersRepositoryListener listener) {
         mFoldersRepository.insertFolder(input, listener);
-    }
-
-    public void loadNote(final int noteId){
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                NoteEntity noteEntity = mNotesRepository.getNoteById(noteId);
-                mMutableLiveNoteEntity.postValue(noteEntity);
-            }
-        });
-    }
-
-    public void loadNote(final int noteId, final long folderId) {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                NoteItem noteItem = mNotesRepository.getNoteItemById(noteId, folderId);
-                mMutableLiveNote.postValue(noteItem);
-            }
-        });
     }
 }

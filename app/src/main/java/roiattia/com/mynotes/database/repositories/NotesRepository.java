@@ -37,26 +37,7 @@ public class NotesRepository {
         return mDatabase.noteDao().getAllNotes();
     }
 
-    public void insertNotes(final List<NoteEntity> notes){
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.noteDao().insertAllNotes(notes);
-            }
-        });
-    }
-
-    public void deleteAllNotes() {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                int rowsDelete = mDatabase.noteDao().deleteAllNotes();
-                Log.i(TAG, "number of rows deleted: " + rowsDelete);
-            }
-        });
-    }
-
-    public NoteEntity getNoteById(int noteId) {
+    public NoteItem getNoteById(long noteId) {
         return mDatabase.noteDao().getNoteById(noteId);
     }
 
@@ -65,15 +46,6 @@ public class NotesRepository {
             @Override
             public void run() {
                 mDatabase.noteDao().insertNote(noteEntity);
-            }
-        });
-    }
-
-    public void deleteNote(final NoteEntity noteEntity) {
-        mExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase.noteDao().deleteNote(noteEntity);
             }
         });
     }
@@ -87,10 +59,6 @@ public class NotesRepository {
         });
     }
 
-    public NoteItem getNoteItemById(int noteId, long folderId) {
-        return mDatabase.noteDao().getNoteItemById(noteId, folderId);
-    }
-
     public void deleteNoteById(final int id) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
@@ -98,5 +66,9 @@ public class NotesRepository {
                 mDatabase.noteDao().deleteNoteById(id);
             }
         });
+    }
+
+    public LiveData<List<NoteEntity>> getNotesByFolderId(long folderId) {
+        return mDatabase.noteDao().getNotesByFolderId(folderId);
     }
 }

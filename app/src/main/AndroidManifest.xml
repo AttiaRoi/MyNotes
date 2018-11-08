@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.noteslist.NotesListActivity"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".ui.noteslist.NotesListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,10 +18,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.editnote.EditNoteActivity"
+            android:name=".ui.note.EditNoteActivity"
             android:parentActivityName=".ui.noteslist.NotesListActivity" />
-        <activity android:name=".ui.folderslist.FoldersActivity"
-            android:parentActivityName=".ui.noteslist.NotesListActivity"/>
+        <activity
+            android:name=".ui.folderslist.FoldersListActivity"
+            android:parentActivityName=".ui.noteslist.NotesListActivity" />
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class NoteEntity {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private LocalDate date;
     private LocalTime time;
     private String text;
@@ -40,7 +40,7 @@ public class NoteEntity {
         this.text = text;
     }
 
-    public NoteEntity(int id, LocalDate date, LocalTime time, String text, Long folderId) {
+    public NoteEntity(long id, LocalDate date, LocalTime time, String text, Long folderId) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -64,11 +64,11 @@ public class NoteEntity {
         this.time = time;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

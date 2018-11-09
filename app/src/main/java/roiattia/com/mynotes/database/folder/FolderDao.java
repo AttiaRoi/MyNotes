@@ -34,4 +34,6 @@ public interface FolderDao {
             "GROUP BY folder.id")
     LiveData<List<FolderListItem>> getAllFoldersItems();
 
+    @Query("DELETE FROM folder WHERE id=:id")
+    void deleteFolderById(long id);
 }

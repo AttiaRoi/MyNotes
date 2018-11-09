@@ -8,8 +8,7 @@ public class Constants {
 }
 
 
-//TODO 1: add delete folder function
 //TODO 2: add search note and folder function
 //TODO 3: close dates issues
 //TODO 4: add show by function
-//TODO 4: finish navigations
+//TODO 4: finish navigation

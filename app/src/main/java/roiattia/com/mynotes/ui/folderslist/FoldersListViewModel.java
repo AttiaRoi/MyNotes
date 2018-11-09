@@ -28,4 +28,8 @@ public class FoldersListViewModel extends AndroidViewModel {
     public void insertFolder(String input) {
         mRepository.insertFolder(input);
     }
+
+    public void deleteFolderById(long id) {
+        mRepository.deleteFolderById(id);
+    }
 }

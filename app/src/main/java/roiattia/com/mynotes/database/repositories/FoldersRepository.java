@@ -20,6 +20,15 @@ public class FoldersRepository {
     private AppDatabase mDatabase;
     private AppExecutors mExecutors;
 
+    public void deleteFolderById(final long id) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.folderDao().deleteFolderById(id);
+            }
+        });
+    }
+
     public interface FoldersRepositoryListener{
         void onFolderInserted(FolderEntity folder);
     }

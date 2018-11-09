@@ -34,6 +34,8 @@ public class FoldersListAdapter extends RecyclerView.Adapter<FoldersListAdapter.
          * @param index the clicked note index
          */
         void onFolderClick(int index);
+        void onDeleteFolder(int index);
+        void onNewNoteInFolder(int index);
     }
 
     /**
@@ -54,18 +56,31 @@ public class FoldersListAdapter extends RecyclerView.Adapter<FoldersListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
-        final FolderListItem folder = mFoldersList.get(position);
-        holder.itemView.setTag(folder.getId());
+    public void onBindViewHolder(@NonNull final NotesViewHolder holder, final int position) {
+        final int folderPosition = position;
+        final FolderListItem folder = mFoldersList.get(folderPosition);
+        holder.itemView.setTag((int)folder.getId());
         holder.mName.setText(folder.getName());
         int notesCount = folder.getNotesCount();
         holder.mNotesCount.setText(String.format(Locale.getDefault(),
                 "Number of notes: %d", notesCount));
         if(notesCount > 0) {
-            holder.mImage.setImageResource(R.mipmap.ic_filled_folder);
+            holder.mFolderImage.setImageResource(R.mipmap.ic_filled_folder);
         } else {
-            holder.mImage.setImageResource(R.mipmap.ic_empty_folder);
+            holder.mFolderImage.setImageResource(R.mipmap.ic_empty_folder);
         }
+        holder.mDeleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onDeleteFolder(folderPosition);
+            }
+        });
+        holder.mNewNoteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onNewNoteInFolder(folderPosition);
+            }
+        });
     }
 
     @Override
@@ -78,7 +93,9 @@ public class FoldersListAdapter extends RecyclerView.Adapter<FoldersListAdapter.
 
         @BindView(R.id.tv_folder_name) TextView mName;
         @BindView(R.id.tv_number_of_notes) TextView mNotesCount;
-        @BindView(R.id.iv_folder) ImageView mImage;
+        @BindView(R.id.iv_folder) ImageView mFolderImage;
+        @BindView(R.id.iv_delete_folder) ImageView mDeleteImage;
+        @BindView(R.id.iv_new_note) ImageView mNewNoteImage;
 
         NotesViewHolder(View itemView) {
             super(itemView);

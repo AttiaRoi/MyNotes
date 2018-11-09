@@ -2,8 +2,10 @@ package roiattia.com.mynotes.ui.folderslist;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import butterknife.OnClick;
 import roiattia.com.mynotes.model.FolderListItem;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.ui.dialogs.NewFolderDialog;
+import roiattia.com.mynotes.ui.note.EditNoteActivity;
 import roiattia.com.mynotes.ui.noteslist.NotesListActivity;
 
 import static android.view.View.GONE;
@@ -34,6 +37,7 @@ public class FoldersListActivity extends AppCompatActivity
     private FoldersListAdapter mFoldersAdapter;
     private FoldersListViewModel mViewModel;
     private NewFolderDialog mAddFolderDialog;
+    private AlertDialog.Builder mDeleteFolderBuilder;
     private List<FolderListItem> mFolderListItems;
 
     @BindView(R.id.rv_folders) RecyclerView mFoldersRecyclerView;
@@ -71,6 +75,46 @@ public class FoldersListActivity extends AppCompatActivity
         intent.putExtra(FOLDER_NAME_KEY, mFolderListItems.get(index).getName());
         startActivity(intent);
     }
+
+    @Override
+    public void onDeleteFolder(final int index) {
+        final FolderListItem folderItem = mFolderListItems.get(index);
+        if(mDeleteFolderBuilder == null) {
+            mDeleteFolderBuilder = new AlertDialog.Builder(this);
+        }
+        // set title
+        mDeleteFolderBuilder.setTitle("Delete " + folderItem.getName() + " Folder");
+        // set dialog message
+        mDeleteFolderBuilder
+                .setCancelable(false)
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mViewModel.deleteFolderById(folderItem.getId());
+                    }
+                })
+                .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+        if(folderItem.getNotesCount() > 0){
+            mDeleteFolderBuilder.setMessage(folderItem.getNotesCount() + " Notes will be deleted");
+        } else {
+            mDeleteFolderBuilder.setMessage("Empty folder");
+        }
+        AlertDialog deleteFolderDialog = mDeleteFolderBuilder.create();
+        deleteFolderDialog.show();
+    }
+
+    @Override
+    public void onNewNoteInFolder(final int index) {
+        Intent intent = new Intent(FoldersListActivity.this, EditNoteActivity.class);
+        intent.putExtra(FOLDER_ID_KEY, mFolderListItems.get(index).getId());
+        startActivity(intent);
+    }
+
 
     /**
      * Handle new folder confirmed dialog action
@@ -120,18 +164,5 @@ public class FoldersListActivity extends AppCompatActivity
         mFoldersRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mFoldersRecyclerView.setLayoutManager(layoutManager);
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT ) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                long folderId = viewHolder.itemView.getId();
-            }
-        }).attachToRecyclerView(mFoldersRecyclerView);
     }
 }

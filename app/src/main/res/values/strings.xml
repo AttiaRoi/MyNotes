@@ -20,4 +20,5 @@
 
     <!-- FoldersListActivity -->
     <string name="folder_activity_title">My Folders</string>
+    <string name="search_hint">search hint</string>
 </resources>

@@ -8,7 +8,9 @@ public class Constants {
 }
 
 
-//TODO 2: add search note and folder function
 //TODO 3: close dates issues
 //TODO 4: add show by function
-//TODO 4: finish navigation
+//TODO 5: finish navigation
+//TODO 6: add notifications
+//TODO 7: add settings activity
+

@@ -10,11 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,6 +41,7 @@ public class FoldersListActivity extends AppCompatActivity
     private NewFolderDialog mAddFolderDialog;
     private AlertDialog.Builder mDeleteFolderBuilder;
     private List<FolderListItem> mFolderListItems;
+    private List<FolderListItem> mSearchedFolders;
 
     @BindView(R.id.rv_folders) RecyclerView mFoldersRecyclerView;
     @BindView(R.id.tv_empty_list) TextView mEmptyListMessage;
@@ -129,6 +132,41 @@ public class FoldersListActivity extends AppCompatActivity
         } else {
             mViewModel.insertFolder(input);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_folders_list, menu);
+        // Get the SearchView and set the searchable configuration
+        MenuItem item = menu.findItem(R.id.mi_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchFolders(newText);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private void searchFolders(String newText) {
+        if(mSearchedFolders == null){
+            mSearchedFolders = new ArrayList<>();
+        } else {
+            mSearchedFolders.clear();
+        }
+        for(FolderListItem folder : mFolderListItems){
+            if(folder.getName().toLowerCase().contains(newText.toLowerCase())){
+                mSearchedFolders.add(folder);
+            }
+        }
+        mFoldersAdapter.setFoldersList(mSearchedFolders);
     }
 
     /**

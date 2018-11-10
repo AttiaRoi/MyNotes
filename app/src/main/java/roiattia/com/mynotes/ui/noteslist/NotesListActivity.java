@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +42,8 @@ public class NotesListActivity extends AppCompatActivity
 
     private NotesListAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
+    private List<NoteEntity> mNotesList;
+    private List<NoteEntity> mSearchedNotes;
     // notes list that are checked for deletion
     private List<NoteEntity> mNotesForDeletion;
     // true - notes list of a specific folder. false - all notes
@@ -63,6 +65,8 @@ public class NotesListActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         mNotesForDeletion = new ArrayList<>();
+        mNotesList = new ArrayList<>();
+
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
 
         getIntentExtras();
@@ -121,7 +125,36 @@ public class NotesListActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_notes_list, menu);
+        // Get the SearchView and set the searchable configuration
+        MenuItem item = menu.findItem(R.id.mi_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchNotes(newText);
+                return false;
+            }
+        });
         return true;
+    }
+
+    private void searchNotes(String newText) {
+        if(mSearchedNotes == null){
+            mSearchedNotes = new ArrayList<>();
+        } else {
+            mSearchedNotes.clear();
+        }
+        for(NoteEntity note : mNotesList){
+            if(note.getText().toLowerCase().contains(newText.toLowerCase())){
+                mSearchedNotes.add(note);
+            }
+        }
+        mNotesAdapter.setNotesList(mSearchedNotes);
     }
 
     @Override
@@ -186,6 +219,7 @@ public class NotesListActivity extends AppCompatActivity
             public void onChanged(@Nullable List<NoteEntity> noteEntities) {
                 if(noteEntities != null) {
                     mNotesAdapter.setNotesList(noteEntities);
+                    mNotesList = noteEntities;
                     // if the list is empty then show an empty list text box
                     if(noteEntities.size() > 0){
                         mEmptyListMessage.setVisibility(GONE);

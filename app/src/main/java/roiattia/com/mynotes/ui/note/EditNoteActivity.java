@@ -11,6 +11,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -32,8 +33,12 @@ import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.database.repositories.FoldersRepository;
 import roiattia.com.mynotes.ui.dialogs.NewFolderDialog;
+import roiattia.com.mynotes.ui.folderslist.FoldersListActivity;
+import roiattia.com.mynotes.ui.noteslist.NotesListActivity;
 
 import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
+import static roiattia.com.mynotes.utils.Constants.FOLDER_NAME_KEY;
+import static roiattia.com.mynotes.utils.Constants.INSIDE_FOLDER;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 
 public class EditNoteActivity extends AppCompatActivity
@@ -43,7 +48,7 @@ public class EditNoteActivity extends AppCompatActivity
     private static final String TAG = EditNoteActivity.class.getSimpleName();
 
     private EditNoteViewModel mViewModel;
-    private boolean mIsNewNote;
+    private boolean mIsNewNote, mIsInsideFolder;
     private List<FolderEntity> mFoldersList;
     private NoteEntity mNote;
     // Dialogs
@@ -68,7 +73,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         setupViewModel();
 
-        checkIntentForExtra();
+        handleIntent();
     }
 
     /**
@@ -167,7 +172,11 @@ public class EditNoteActivity extends AppCompatActivity
                 shareNote();
                 return true;
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                if (mIsInsideFolder) {
+                    onBackPressed();
+                } else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -177,7 +186,7 @@ public class EditNoteActivity extends AppCompatActivity
      * Check for intent extras. If it is a new note or an existing
      * note and set title accordingly
      */
-    private void checkIntentForExtra() {
+    private void handleIntent() {
         Intent intent = getIntent();
         if(intent != null){
             // check for note id extra
@@ -187,10 +196,9 @@ public class EditNoteActivity extends AppCompatActivity
                 mViewModel.loadNote(noteId);
                 mIsNewNote = false;
             }
-            // check for folder id extra
-            if(intent.hasExtra(FOLDER_ID_KEY)){
-                long folderId = intent.getLongExtra(FOLDER_ID_KEY, 0);
-                mViewModel.loadFolder(folderId);
+            // check for folder indicator extra
+            if(intent.hasExtra(INSIDE_FOLDER)){
+                mIsInsideFolder = true;
             }
         }
     }

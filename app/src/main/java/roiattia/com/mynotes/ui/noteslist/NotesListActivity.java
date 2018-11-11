@@ -37,6 +37,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_NAME_KEY;
+import static roiattia.com.mynotes.utils.Constants.INSIDE_FOLDER;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
@@ -44,7 +45,6 @@ public class NotesListActivity extends AppCompatActivity
     implements NotesListAdapter.OnNoteClick{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
-
 
     private NotesListAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
@@ -122,6 +122,9 @@ public class NotesListActivity extends AppCompatActivity
     public void onNoteClick(long noteId) {
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         intent.putExtra(NOTE_ID_KEY, noteId);
+        if(mIsInsideFolder){
+            intent.putExtra(INSIDE_FOLDER, true);
+        }
         startActivity(intent);
     }
 
@@ -232,6 +235,8 @@ public class NotesListActivity extends AppCompatActivity
             mFolderId = intent.getLongExtra(FOLDER_ID_KEY, 0);
             // set the title to the folder's name
             setTitle(intent.getStringExtra(FOLDER_NAME_KEY));
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 

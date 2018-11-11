@@ -9,26 +9,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.noteslist.NotesListActivity">
+
+        <activity android:name=".ui.noteslist.NotesListActivity"
+            android:parentActivityName=".ui.folderslist.FoldersListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.note.EditNoteActivity"
             android:parentActivityName=".ui.noteslist.NotesListActivity" />
+
         <activity
             android:name=".ui.folderslist.FoldersListActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.noteslist.NotesListActivity" />
-        <activity android:name=".ui.SearchActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
-        </activity>
+
+
     </application>
 
 </manifest>

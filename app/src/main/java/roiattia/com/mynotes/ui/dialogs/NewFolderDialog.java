@@ -27,9 +27,10 @@ public class NewFolderDialog extends DialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_edit_text, null, false);
+        final View title = inflater.inflate(R.layout.title_folders_dialog, null, false);
 
         builder.setView(view)
-                .setTitle("Enter Folder Name")
+                .setCustomTitle(title)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_confirm, new DialogInterface.OnClickListener() {
                     @Override

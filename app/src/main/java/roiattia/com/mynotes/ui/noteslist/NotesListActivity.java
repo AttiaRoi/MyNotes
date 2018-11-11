@@ -2,7 +2,9 @@ package roiattia.com.mynotes.ui.noteslist;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,15 +38,19 @@ import static android.view.View.VISIBLE;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_NAME_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
+import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
 public class NotesListActivity extends AppCompatActivity
     implements NotesListAdapter.OnNoteClick{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
 
+
     private NotesListAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
+    // the entire notes list
     private List<NoteEntity> mNotesList;
+    // notes that meet a search query
     private List<NoteEntity> mSearchedNotes;
     // notes list that are checked for deletion
     private List<NoteEntity> mNotesForDeletion;
@@ -64,18 +72,32 @@ public class NotesListActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes_list);
         ButterKnife.bind(this);
 
-        mNotesForDeletion = new ArrayList<>();
         mNotesList = new ArrayList<>();
-
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
 
-        getIntentExtras();
+        handleIntent();
 
         setupRecyclerView();
 
         setupViewModel();
 
         setupUI();
+    }
+
+    /**
+     * Handle record note action
+     */
+    @OnClick(R.id.fab_record_note)
+    public void recordNote(){
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to record a Note");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException e) {
+            Log.i(TAG, e.getMessage());
+        }
     }
 
     /**
@@ -110,6 +132,9 @@ public class NotesListActivity extends AppCompatActivity
      */
     @Override
     public void onCheckBoxChecked(NoteEntity noteEntity, boolean addForDeletion) {
+        if(mNotesForDeletion == null){
+            mNotesForDeletion = new ArrayList<>();
+        }
         // if note checked then add to the mNotesForDeletion list
         if(addForDeletion){
             mNotesForDeletion.add(noteEntity);
@@ -143,20 +168,6 @@ public class NotesListActivity extends AppCompatActivity
         return true;
     }
 
-    private void searchNotes(String newText) {
-        if(mSearchedNotes == null){
-            mSearchedNotes = new ArrayList<>();
-        } else {
-            mSearchedNotes.clear();
-        }
-        for(NoteEntity note : mNotesList){
-            if(note.getText().toLowerCase().contains(newText.toLowerCase())){
-                mSearchedNotes.add(note);
-            }
-        }
-        mNotesAdapter.setNotesList(mSearchedNotes);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -169,15 +180,52 @@ public class NotesListActivity extends AppCompatActivity
                 Intent intent = new Intent(NotesListActivity.this, FoldersListActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.mi_sort:
+                Toast.makeText(this, "sort notes", Toast.LENGTH_SHORT).show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result =
+                            data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mViewModel.insertNewNote(result.get(0));
+                }
+                break;
+            }
+
+        }
+    }
+
+    /**
+     * Search for notes containing the search query text
+     * @param textQuery the text query to search on
+     */
+    private void searchNotes(String textQuery) {
+        if(mSearchedNotes == null){
+            mSearchedNotes = new ArrayList<>();
+        } else {
+            mSearchedNotes.clear();
+        }
+        for(NoteEntity note : mNotesList){
+            if(note.getText().toLowerCase().contains(textQuery.toLowerCase())){
+                mSearchedNotes.add(note);
+            }
+        }
+        mNotesAdapter.setNotesList(mSearchedNotes);
     }
 
     /**
      * Check for an intent extra. if there is then this activity was opened by
      * a folder to show it's notes
      */
-    private void getIntentExtras() {
+    private void handleIntent() {
         Intent intent = getIntent();
         if(intent != null && intent.hasExtra(FOLDER_ID_KEY)){
             mIsInsideFolder = true;

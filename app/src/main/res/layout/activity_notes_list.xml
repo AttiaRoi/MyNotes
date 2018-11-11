@@ -74,6 +74,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_create_white_24dp" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_record_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/fab_add_note"
+        app:layout_constraintStart_toStartOf="@+id/fab_add_note"
+        app:srcCompat="@drawable/ic_mic_white_24dp" />
+
     <TextView
         android:id="@+id/tv_empty_list"
         android:layout_width="wrap_content"

@@ -5,8 +5,12 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 import java.util.List;
 
+import roiattia.com.mynotes.database.AppExecutors;
 import roiattia.com.mynotes.database.repositories.NotesRepository;
 import roiattia.com.mynotes.database.note.NoteEntity;
 
@@ -29,5 +33,9 @@ public class NotesListViewModel extends AndroidViewModel {
 
     public LiveData<List<NoteEntity>> getNotesByFolderIdLiveData(long folderId) {
         return mNotesRepository.getNotesByFolderId(folderId);
+    }
+
+    public void insertNewNote(String text) {
+        mNotesRepository.insertNote(new NoteEntity(new LocalDate(), new LocalTime(), text));
     }
 }

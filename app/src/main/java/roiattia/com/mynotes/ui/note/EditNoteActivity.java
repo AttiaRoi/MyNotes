@@ -1,5 +1,7 @@
 package roiattia.com.mynotes.ui.note;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -14,14 +16,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +39,7 @@ import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.database.repositories.FoldersRepository;
+import roiattia.com.mynotes.sync.NoteReminder;
 import roiattia.com.mynotes.ui.dialogs.NewFolderDialog;
 import roiattia.com.mynotes.ui.folderslist.FoldersListActivity;
 import roiattia.com.mynotes.ui.noteslist.NotesListActivity;
@@ -51,10 +59,14 @@ public class EditNoteActivity extends AppCompatActivity
     private boolean mIsNewNote, mIsInsideFolder;
     private List<FolderEntity> mFoldersList;
     private NoteEntity mNote;
+    private LocalDateTime mReminderDateTime;
+    private Calendar mCalendar;
     // Dialogs
     private AlertDialog mDeleteNoteDialog;
     private PickFolderDialog mAddToFolderDialog;
     private NewFolderDialog mAddNewFolderDialog;
+    private DatePickerDialog mDatePickerDialog;
+    private TimePickerDialog mTimePickerDialog;
 
     @BindView(R.id.tv_note_text) EditText mNoteText;
     @BindView(R.id.tv_folder_text) TextView mFolderText;
@@ -69,11 +81,46 @@ public class EditNoteActivity extends AppCompatActivity
         setTitle(getString(R.string.new_note));
 
         mNote = new NoteEntity();
+        mReminderDateTime = new LocalDateTime();
+        mCalendar = Calendar.getInstance();
         mIsNewNote = true;
 
         setupViewModel();
 
         handleIntent();
+    }
+
+    @OnClick(R.id.btn_set_reminder)
+    public void setNoteReminder(){
+        if(mDatePickerDialog == null || mTimePickerDialog == null) {
+            setupPickers();
+        }
+        mDatePickerDialog.show();
+    }
+
+    private void setupPickers() {
+        mDatePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String dateString = year + "-" + (month+1) + "-" + dayOfMonth;
+                        mReminderDateTime = LocalDateTime.parse(dateString);
+                        mTimePickerDialog.show();
+                    }
+                }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DAY_OF_MONTH));
+
+        mTimePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        mReminderDateTime = mReminderDateTime.withHourOfDay(hourOfDay);
+                        mReminderDateTime = mReminderDateTime.withMinuteOfHour(minute);
+                        Log.i("kinga", mReminderDateTime.toString());
+                        NoteReminder.scheduleSalariesReminder(EditNoteActivity.this,
+                                mReminderDateTime, mNote.getText());
+                    }
+                }, mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE), true);
     }
 
     /**
@@ -223,6 +270,7 @@ public class EditNoteActivity extends AppCompatActivity
                         mNote.setId(noteItem.getId());
                         mFolderImage.setImageResource(R.mipmap.ic_filled_folder);
                     }
+                    mNote.setText(noteItem.getText());
                     mNoteText.setText(noteItem.getText());
                 }
             }

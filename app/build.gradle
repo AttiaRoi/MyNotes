@@ -44,4 +44,6 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife_version"
     // Joda time
     implementation 'joda-time:joda-time:2.10'
+    // FireBase
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 }

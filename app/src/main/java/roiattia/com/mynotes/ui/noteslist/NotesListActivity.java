@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +36,7 @@ import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.ui.folderslist.FoldersListActivity;
 import roiattia.com.mynotes.ui.note.EditNoteActivity;
+import roiattia.com.mynotes.utils.PreferencesUtil;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -42,7 +47,8 @@ import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
 public class NotesListActivity extends AppCompatActivity
-    implements NotesListAdapter.OnNoteClick{
+    implements NotesListAdapter.OnNoteClick, FieldsDialog.FieldsDialogListener,
+    SharedPreferences.OnSharedPreferenceChangeListener{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
 
@@ -58,6 +64,10 @@ public class NotesListActivity extends AppCompatActivity
     private boolean mIsInsideFolder;
     // folder id for notes retrieval
     private long mFolderId;
+    private FieldsDialog mFieldsDialog;
+//    private SortDialog mNoteSortDialog;
+    // array representing the fields dialog show options
+    private boolean[] mSelectedFields;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
     @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
@@ -73,6 +83,7 @@ public class NotesListActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         mNotesList = new ArrayList<>();
+        mSelectedFields = new boolean[3];
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
 
         handleIntent();
@@ -82,6 +93,8 @@ public class NotesListActivity extends AppCompatActivity
         setupViewModel();
 
         setupUI();
+
+        loadDataFromPrefs();
     }
 
     /**
@@ -161,13 +174,13 @@ public class NotesListActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 searchNotes(newText);
                 return false;
             }
         });
+
         return true;
     }
 
@@ -183,11 +196,31 @@ public class NotesListActivity extends AppCompatActivity
                 Intent intent = new Intent(NotesListActivity.this, FoldersListActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.mi_sort:
-                Toast.makeText(this, "sort notes", Toast.LENGTH_SHORT).show();
+//            case R.id.mi_sort:
+//                showSortDialog();
+//                return true;
+            case R.id.mi_note_list:
+                showFieldsDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+//    private void showSortDialog() {
+//        if(mNoteSortDialog == null){
+//            mNoteSortDialog = new SortDialog();
+//            mNoteSortDialog.setSortOptions(getResources().getStringArray(R.array.fields_selection_options));
+//        }
+//        mNoteSortDialog.show(getSupportFragmentManager(), "sort_dialog");
+//    }
+
+    private void showFieldsDialog() {
+        if(mFieldsDialog == null){
+            mFieldsDialog = new FieldsDialog();
+            mFieldsDialog.setFields(getResources().getStringArray(R.array.fields_selection_options));
+        }
+        mFieldsDialog.setSelectedFieldsBoolean(mSelectedFields);
+        mFieldsDialog.show(getSupportFragmentManager(), "fields_dialog");
     }
 
     @Override
@@ -325,4 +358,40 @@ public class NotesListActivity extends AppCompatActivity
             mNotesAdapter.setShowCheckBoxes(false);
         }
     }
+
+    /**
+     * Load data from shared preferences
+     */
+    private void loadDataFromPrefs() {
+        mSelectedFields[0] = PreferencesUtil.getShowCreationDate(this);
+        mSelectedFields[1] = PreferencesUtil.getShowLastEditDate(this);
+        mSelectedFields[2] = PreferencesUtil.getShowReminderDate(this);
+        mNotesAdapter.setSelectedFields(mSelectedFields);
+    }
+
+    @Override
+    public void onDialogFinishClick(ArrayList<Integer> selectedItems) {
+        PreferencesUtil.setFields(this, selectedItems);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        loadDataFromPrefs();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
 }

@@ -13,15 +13,17 @@ import android.util.Log;
 
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.note.NoteEntity;
+import roiattia.com.mynotes.ui.note.EditNoteActivity;
 import roiattia.com.mynotes.ui.noteslist.NotesListActivity;
 
+import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_PENDING_INTENT_ID;
 import static roiattia.com.mynotes.utils.Constants.NOTE_REMINDER_NOTIFICATION_CHANNEL_ID;
 import static roiattia.com.mynotes.utils.Constants.NOTE_REMINDER_NOTIFICATION_ID;
 
 public class NotificationUtils {
 
-    public static void remindUserOfNote(Context context, String noteText) {
+    public static void remindUserOfNote(Context context, String noteText, long noteId) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -41,7 +43,7 @@ public class NotificationUtils {
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(noteText)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentIntent(contentIntent(context))
+                .setContentIntent(contentIntent(context, noteId))
                 .setAutoCancel(true);
 
         // set the notification's priority to PRIORITY_HIGH.
@@ -55,8 +57,9 @@ public class NotificationUtils {
         }
     }
 
-    private static PendingIntent contentIntent(Context context) {
-        Intent startActivityIntent = new Intent(context, NotesListActivity.class);
+    private static PendingIntent contentIntent(Context context, long noteId) {
+        Intent startActivityIntent = new Intent(context, EditNoteActivity.class);
+        startActivityIntent.putExtra(NOTE_ID_KEY, noteId);
         return PendingIntent.getActivity(
                 context,
                 NOTE_PENDING_INTENT_ID,

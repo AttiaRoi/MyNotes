@@ -19,33 +19,37 @@ import java.util.concurrent.TimeUnit;
 import roiattia.com.mynotes.database.note.NoteEntity;
 
 import static com.firebase.jobdispatcher.Lifetime.FOREVER;
+import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_TEXT_EXTRA;
 import static roiattia.com.mynotes.utils.Constants.REMINDER_JOB_TAG;
 
 public class NoteReminder {
 
-    private static final int SYNC_FLEXTIME_SECONDS = (int) TimeUnit.MINUTES.toSeconds(1);
-
-    private static boolean sInitialized;
+    private static final int SYNC_FLEXTIME_SECONDS = (int) TimeUnit.SECONDS.toSeconds(30);
 
     synchronized public static void scheduleSalariesReminder(
-            Context context, LocalDateTime localDateTime, String noteText){
-        if(sInitialized) return;
+            Context context, NoteEntity note){
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
         Bundle bundle = new Bundle();
-        bundle.putString(NOTE_TEXT_EXTRA, noteText);
+        bundle.putString(NOTE_TEXT_EXTRA, note.getText());
+        bundle.putLong(NOTE_ID_KEY, note.getId());
         Job constraintsReminderJob = dispatcher.newJobBuilder()
                 .setExtras(bundle)
                 .setService(ReminderFireBaseJobService.class)
-                .setTag(REMINDER_JOB_TAG)
+                .setTag(String.valueOf(note.getId()))
                 .setTrigger(Trigger.executionWindow(
-                        getReminderTime(localDateTime),
-                        getReminderTime(localDateTime) + SYNC_FLEXTIME_SECONDS))
+                        getReminderTime(note.getReminderDate()),
+                        getReminderTime(note.getReminderDate()) + SYNC_FLEXTIME_SECONDS))
                 .build();
 
         dispatcher.schedule(constraintsReminderJob);
-        sInitialized = true;
+    }
+
+    public static void cancelReminder(Context context, long noteId){
+        Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+        dispatcher.cancel(String.valueOf(noteId));
     }
 
     private static int getReminderTime(LocalDateTime localDateTime) {

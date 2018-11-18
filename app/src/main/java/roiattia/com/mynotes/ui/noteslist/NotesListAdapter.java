@@ -3,12 +3,15 @@ package roiattia.com.mynotes.ui.noteslist;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
@@ -26,11 +29,17 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     private Context mContext;
     private List<NoteEntity> mNotesList;
     private OnNoteClick mClickListener;
+    private boolean[] mSelectedFields;
     private boolean mShowCheckBoxes;
 
     NotesListAdapter(Context context, OnNoteClick clickListener) {
         mContext = context;
         mClickListener = clickListener;
+    }
+
+    public void setSelectedFields(boolean[] selectedFields) {
+        mSelectedFields = selectedFields;
+        notifyDataSetChanged();
     }
 
     public interface OnNoteClick{
@@ -79,9 +88,29 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
         final NoteEntity note = mNotesList.get(position);
         holder.mNoteTextView.setText(note.getText());
-        holder.mNoteDateView.setText(String.format("Last edited at: %s - %s",
-                TextFormat.getDateStringFormat(note.getDate()),
-                TextFormat.getTimeStringFormat(note.getTime())));
+        if(mSelectedFields[0]) {
+            holder.mNoteCreationDateView.setVisibility(VISIBLE);
+            holder.mNoteCreationDateView.setText(String.format("Created at: %s",
+                    TextFormat.getDateTimeStringFormat(note.getCreationDate())));
+        } else {
+            holder.mNoteCreationDateView.setVisibility(GONE);
+        }
+        if(mSelectedFields[1]) {
+            holder.mLastEditDateView.setVisibility(VISIBLE);
+            holder.mLastEditDateView.setText(String.format("Last edit at: %s",
+                    TextFormat.getDateTimeStringFormat(note.getLastEditDate())));
+        } else {
+            holder.mLastEditDateView.setVisibility(GONE);
+        }
+        // check if note has reminder date
+        if(mSelectedFields[2] && note.getReminderDate() != null &&
+                !note.getReminderDate().isBefore(new LocalDateTime())){
+            holder.mReminderDateView.setVisibility(VISIBLE);
+            holder.mReminderDateView.setText(String.format("Reminder at: %s",
+                    TextFormat.getDateTimeStringFormat(note.getReminderDate())));
+        } else {
+            holder.mReminderDateView.setVisibility(GONE);
+        }
         // check mShowCheckBoxes, if true then show check boxes and uncheck them
         if(mShowCheckBoxes) {
             holder.mCheckBox.setVisibility(VISIBLE);
@@ -111,7 +140,9 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
             implements View.OnClickListener{
 
         @BindView(R.id.tv_note_text) TextView mNoteTextView;
-        @BindView(R.id.tv_note_date) TextView mNoteDateView;
+        @BindView(R.id.tv_creation_date) TextView mNoteCreationDateView;
+        @BindView(R.id.tv_edit_date) TextView mLastEditDateView;
+        @BindView(R.id.tv_reminder_date) TextView mReminderDateView;
         @BindView(R.id.checkBox) CheckBox mCheckBox;
 
         NotesViewHolder(View itemView) {

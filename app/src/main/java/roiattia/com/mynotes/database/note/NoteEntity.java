@@ -6,10 +6,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-
-import java.util.Date;
+import org.joda.time.LocalDateTime;
 
 import roiattia.com.mynotes.database.folder.FolderEntity;
 
@@ -23,79 +20,102 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class NoteEntity {
 
     @PrimaryKey(autoGenerate = true)
-    private long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String text;
+    @ColumnInfo(name = "note_id")
+    private long mId;
     @ColumnInfo(name = "folder_id")
-    private Long folderId;
+    private Long mFolderId;
+    @ColumnInfo(name = "creation_date")
+    private LocalDateTime mCreationDate;
+    @ColumnInfo(name = "last_edit_date")
+    private LocalDateTime mLastEditDate;
+    @ColumnInfo(name = "note_text")
+    private String mText;
+    @ColumnInfo(name = "reminder_date")
+    private LocalDateTime mReminderDate;
 
     @Ignore
     public NoteEntity() { }
 
+    public NoteEntity(long id, Long folderId, LocalDateTime creationDate, LocalDateTime lastEditDate,
+                      String text, LocalDateTime reminderDate) {
+        mId = id;
+        mFolderId = folderId;
+        mCreationDate = creationDate;
+        mLastEditDate = lastEditDate;
+        mText = text;
+        mReminderDate = reminderDate;
+    }
+
     @Ignore
-    public NoteEntity(LocalDate date, LocalTime time, String text) {
-        this.date = date;
-        this.time = time;
-        this.text = text;
+    public NoteEntity(LocalDateTime dateTime, String text) {
+        mText = text;
+        mLastEditDate = dateTime;
     }
 
-    public NoteEntity(long id, LocalDate date, LocalTime time, String text, Long folderId) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.text = text;
-        this.folderId = folderId;
-    }
-
-    public Long getFolderId() {
-        return folderId;
-    }
-
-    public void setFolderId(Long folderId) {
-        this.folderId = folderId;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    @Ignore
+    public NoteEntity(LocalDateTime creationDate, LocalDateTime lastEditDate, String text) {
+        mText = text;
+        mCreationDate = creationDate;
+        mLastEditDate = lastEditDate;
     }
 
     @Override
     public String toString() {
         return "NoteEntity{" +
-                "id=" + id +
-                ", date=" + date +
-                ", time=" + time +
-                ", text='" + text + '\'' +
-                ", folderId=" + folderId +
+                "mId=" + mId +
+                ", mFolderId=" + mFolderId +
+                ", mCreationDate=" + mCreationDate +
+                ", mLastEditDate=" + mLastEditDate +
+                ", mText='" + mText + '\'' +
+                ", mReminderDate=" + mReminderDate +
                 '}';
+    }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
+    public Long getFolderId() {
+        return mFolderId;
+    }
+
+    public void setFolderId(Long folderId) {
+        mFolderId = folderId;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return mCreationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        mCreationDate = creationDate;
+    }
+
+    public LocalDateTime getLastEditDate() {
+        return mLastEditDate;
+    }
+
+    public void setLastEditDate(LocalDateTime lastEditDate) {
+        mLastEditDate = lastEditDate;
+    }
+
+    public String getText() {
+        return mText;
+    }
+
+    public void setText(String text) {
+        mText = text;
+    }
+
+    public LocalDateTime getReminderDate() {
+        return mReminderDate;
+    }
+
+    public void setReminderDate(LocalDateTime reminderDate) {
+        mReminderDate = reminderDate;
     }
 }

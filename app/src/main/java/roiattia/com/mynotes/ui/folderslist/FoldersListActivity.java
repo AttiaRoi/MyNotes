@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
@@ -114,6 +115,7 @@ public class FoldersListActivity extends AppCompatActivity
     @Override
     public void onNewNoteInFolder(final int index) {
         Intent intent = new Intent(FoldersListActivity.this, EditNoteActivity.class);
+        Log.i("kinga", "onNewNoteInFolder " + mFolderListItems.get(index).getId());
         intent.putExtra(FOLDER_ID_KEY, mFolderListItems.get(index).getId());
         startActivity(intent);
     }

@@ -74,7 +74,7 @@ public class EditNoteViewModel extends AndroidViewModel {
 
     public void deleteNote() {
         if(mMutableLiveNote.getValue() != null) {
-            mNotesRepository.deleteNoteById(mMutableLiveNote.getValue().getId());
+            mNotesRepository.deleteNoteById(mMutableLiveNote.getValue().getNoteId());
         }
     }
 

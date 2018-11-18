@@ -14,6 +14,16 @@ public class Constants {
     // Note reminder
     public static final String REMINDER_JOB_TAG = "salaries_reminder_tag";
     public static final String NOTE_TEXT_EXTRA = "note_text_extra";
+    public static final String NOTE_ID_EXTRA = "note_id_extra";
+
+    // Shared Preferences
+    public static final String PREF_SHOW_CREATION_DATE = "creation_date";
+    public static final String PREF_SHOW_LAST_EDIT_DATE = "last_edit_date";
+    public static final String PREF_SHOW_REMINDER_DATE = "reminder_date";
+
+    public static final String FOLDER = "folder";
+    public static final String REMINDER = "reminder";
+
 }
 
 

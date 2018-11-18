@@ -9,6 +9,15 @@
     <!-- NotesListActivity -->
     <string name="no_notes_to_delete_message">No notes to delete</string>
 
+    <string name="creation_date">Creation date</string>
+    <string name="last_edit_date">Last edit date</string>
+    <string name="reminder_date">Reminder date</string>
+    <string-array name="fields_selection_options">
+        <item>@string/creation_date</item>
+        <item>@string/last_edit_date</item>
+        <item>@string/reminder_date</item>
+    </string-array>
+
     <!-- EditNoteActivity -->
     <string name="delete_note_dialog_title">Delete Note?</string>
     <string name="note_deleted_toast_message">Note deleted successfully!</string>
@@ -21,4 +30,5 @@
     <!-- FoldersListActivity -->
     <string name="folder_activity_title">My Folders</string>
     <string name="search_hint">search hint</string>
+
 </resources>

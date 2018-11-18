@@ -67,6 +67,7 @@ public class FoldersListAdapter extends RecyclerView.Adapter<FoldersListAdapter.
         if(notesCount > 0) {
             holder.mFolderImage.setImageResource(R.mipmap.ic_filled_folder);
         } else {
+            holder.mNotesCount.setText("Empty folder");
             holder.mFolderImage.setImageResource(R.mipmap.ic_empty_folder);
         }
         holder.mDeleteImage.setOnClickListener(new View.OnClickListener() {

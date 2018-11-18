@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 import java.util.List;
@@ -36,6 +37,6 @@ public class NotesListViewModel extends AndroidViewModel {
     }
 
     public void insertNewNote(String text) {
-        mNotesRepository.insertNote(new NoteEntity(new LocalDate(), new LocalTime(), text));
+        mNotesRepository.insertNote(new NoteEntity(new LocalDateTime(), new LocalDateTime(), text));
     }
 }

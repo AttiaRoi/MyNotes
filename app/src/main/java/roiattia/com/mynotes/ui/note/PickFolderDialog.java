@@ -22,7 +22,7 @@ public class PickFolderDialog extends DialogFragment {
 
     public interface FoldersDialogListener {
         void onFolderPicked(FolderEntity folder);
-        void onRemoveFromFolder();
+        void removeFromFolder();
         void onCreateNewFolder();
     }
 
@@ -53,15 +53,15 @@ public class PickFolderDialog extends DialogFragment {
                         mListener.onCreateNewFolder();
                     }
                 })
-                .setNegativeButton("remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mListener.onRemoveFromFolder();
-                    }
-                })
-                .setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { }
+                })
+                .setNeutralButton("remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mListener.removeFromFolder();
+                    }
                 });
         return dialog.create();
     }

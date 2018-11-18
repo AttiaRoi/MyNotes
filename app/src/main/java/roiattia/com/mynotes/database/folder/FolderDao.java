@@ -29,9 +29,9 @@ public interface FolderDao {
     @Query("SELECT * FROM folder")
     LiveData<List<FolderEntity>> getAllFolders();
 
-    @Query("SELECT folder.name AS mName, folder.id AS mId, COUNT(note.id) AS mNotesCount " +
+    @Query("SELECT folder.name AS mName, folder.id AS mId, COUNT(note.note_id) AS mNotesCount " +
             "FROM folder LEFT JOIN note ON folder.id = note.folder_id " +
-            "GROUP BY folder.id")
+            "GROUP BY folder.id ORDER BY COUNT(note.note_id) DESC")
     LiveData<List<FolderListItem>> getAllFoldersItems();
 
     @Query("DELETE FROM folder WHERE id=:id")

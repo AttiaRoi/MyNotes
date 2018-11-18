@@ -11,16 +11,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_note_date"
-            app:srcCompat="@drawable/ic_alarm_grey_24dp"
-            tools:layout_editor_absoluteX="16dp" />
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <TextView
             android:id="@+id/tv_note_text"
@@ -28,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/black"
@@ -36,27 +28,46 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" />
+            tools:noteText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" />
 
         <TextView
-            android:id="@+id/tv_note_date"
+            android:id="@+id/tv_creation_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:visibility="gone"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_edit_gray_24dp"
+            android:gravity="center"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/tv_note_text"
             app:layout_constraintTop_toBottomOf="@+id/tv_note_text"
-            tools:text="Created at 20/09/18 - 20:55" />
+            tools:noteText="Created at 20/09/18 - 20:55" />
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        <TextView
+            android:id="@+id/tv_edit_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_edit_gray_24dp"
+            android:gravity="center"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/tv_note_text"
+            app:layout_constraintTop_toBottomOf="@+id/tv_creation_date"
+            tools:noteText="Last edited at 20/09/18 - 20:55" />
+
+        <TextView
+            android:id="@+id/tv_reminder_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_alarm_grey_24dp"
+            android:gravity="center"
+            android:text="Reminder at 11/11/2018 - 08:50"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/tv_note_text"
+            app:layout_constraintTop_toBottomOf="@+id/tv_edit_date" />
 
         <CheckBox
             android:id="@+id/checkBox"
@@ -66,16 +77,6 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_note_text" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="11/11/2018, 08:50"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     </android.support.constraint.ConstraintLayout>
 

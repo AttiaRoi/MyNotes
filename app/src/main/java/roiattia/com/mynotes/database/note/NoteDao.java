@@ -20,34 +20,25 @@ public interface NoteDao {
     @Insert
     void insertAllNotes(List<NoteEntity> noteEntities);
 
-    @Delete
-    void deleteNote(NoteEntity noteEntity);
-
-    @Query("DELETE FROM note")
-    int deleteAllNotes();
-
-    @Query("SELECT note.id AS id, note.date AS date, note.time AS time, note.text AS text, " +
-            "folder.name AS folderName, folder.id AS folderId FROM note LEFT JOIN folder on " +
-            "note.folder_id = folder.id WHERE note.id =:id")
+    @Query("SELECT note.note_id AS mNoteId,note.creation_date AS mCreationDate, " +
+            "note.last_edit_date AS mLastEditDate, note.reminder_date AS mReminderDate, " +
+            "note.note_text AS mNoteText, folder.name AS mFolderName, " +
+            "folder.id AS mFolderId FROM note LEFT JOIN folder on " +
+            "note.folder_id = folder.id WHERE note.note_id =:id")
     NoteItem getNoteById(long id);
 
-    @Query("SELECT * FROM note ORDER BY date DESC")
+    @Query("SELECT * FROM note ORDER BY last_edit_date DESC")
     LiveData<List<NoteEntity>> getAllNotes();
 
     @Query("SELECT COUNT(*) FROM note")
     int getNotesCount();
 
-    @Query("SELECT note.id AS id, note.date AS date, note.time AS time, note.text AS text, " +
-            "folder.name AS folderName, folder.id AS folderId FROM note JOIN folder on :folderId = folder.id " +
-            "WHERE note.id = :id")
-    NoteItem getNoteItemById(int id, long folderId);
-
     @Delete
     void deleteNotes(List<NoteEntity> notesForDeletion);
 
-    @Query("DELETE FROM note WHERE id = :id")
+    @Query("DELETE FROM note WHERE note_id = :id")
     void deleteNoteById(long id);
 
-    @Query("SELECT * FROM note WHERE folder_id=:folderId ORDER BY date DESC")
+    @Query("SELECT * FROM note WHERE folder_id=:folderId ORDER BY last_edit_date DESC")
     LiveData<List<NoteEntity>> getNotesByFolderId(long folderId);
 }

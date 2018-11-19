@@ -24,6 +24,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.Calendar;
@@ -78,6 +81,8 @@ public class EditNoteActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
         ButterKnife.bind(this);
+
+        setupAd();
 
         mNote = new NoteEntity();
         mReminderDateTime = new LocalDateTime();
@@ -468,5 +473,14 @@ public class EditNoteActivity extends AppCompatActivity
                     R.drawable.ic_alarm_grey_24dp,
                     0, 0, 0);
         }
+    }
+
+    /**
+     * Load ad
+     */
+    private void setupAd() {
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 }

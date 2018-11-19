@@ -23,9 +23,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,9 +66,10 @@ public class NotesListActivity extends AppCompatActivity
     // folder id for notes retrieval
     private long mFolderId;
     private FieldsDialog mFieldsDialog;
-//    private SortDialog mNoteSortDialog;
     // array representing the fields dialog show options
     private boolean[] mSelectedFields;
+
+    //    private SortDialog mNoteSortDialog;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
     @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
@@ -81,6 +83,8 @@ public class NotesListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes_list);
         ButterKnife.bind(this);
+
+        setupAd();
 
         mNotesList = new ArrayList<>();
         mSelectedFields = new boolean[3];
@@ -105,7 +109,7 @@ public class NotesListActivity extends AppCompatActivity
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to record a Note");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.record_note_message));
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException e) {
@@ -218,6 +222,7 @@ public class NotesListActivity extends AppCompatActivity
         if(mFieldsDialog == null){
             mFieldsDialog = new FieldsDialog();
             mFieldsDialog.setFields(getResources().getStringArray(R.array.fields_selection_options));
+            mFieldsDialog.setTitle(getString(R.string.fields_dialog_title));
         }
         mFieldsDialog.setSelectedFieldsBoolean(mSelectedFields);
         mFieldsDialog.show(getSupportFragmentManager(), "fields_dialog");
@@ -231,7 +236,7 @@ public class NotesListActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result =
                             data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    mViewModel.insertNewNote(result.get(0));
+                    mViewModel.insertNoteByRecord(result.get(0));
                 }
                 break;
             }
@@ -367,6 +372,15 @@ public class NotesListActivity extends AppCompatActivity
         mSelectedFields[1] = PreferencesUtil.getShowLastEditDate(this);
         mSelectedFields[2] = PreferencesUtil.getShowReminderDate(this);
         mNotesAdapter.setSelectedFields(mSelectedFields);
+    }
+
+    /**
+     * Load ad
+     */
+    private void setupAd() {
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     @Override

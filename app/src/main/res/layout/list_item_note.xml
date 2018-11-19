@@ -4,23 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="2dp">
+    android:layout_marginBottom="@dimen/eighth_vertical_margin"
+    android:layout_marginTop="@dimen/eighth_vertical_margin"
+    android:layout_marginEnd="@dimen/half_horizontal_margin"
+    android:layout_marginStart="@dimen/half_horizontal_margin">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
+        android:paddingBottom="@dimen/half_vertical_margin"
+        android:paddingTop="@dimen/half_vertical_margin">
 
         <TextView
             android:id="@+id/tv_note_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="@dimen/regular_horizontal_margin"
+            android:layout_marginStart="@dimen/regular_horizontal_margin"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/black"
@@ -28,52 +28,57 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="parent"
-            tools:noteText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" />
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" />
 
         <TextView
             android:id="@+id/tv_creation_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_edit_gray_24dp"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:drawableStart="@drawable/ic_event_note_gray_14dp"
             android:gravity="center"
+            android:textSize="@dimen/dates_text_size"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/tv_note_text"
             app:layout_constraintTop_toBottomOf="@+id/tv_note_text"
-            tools:noteText="Created at 20/09/18 - 20:55" />
+            tools:noteText="Created at 20/09/18 - 20:55"
+            tools:text="Created: 20/20/2018  - 08:50" />
 
         <TextView
             android:id="@+id/tv_edit_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_edit_gray_24dp"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:drawableStart="@drawable/ic_edit_gray_14dp"
             android:gravity="center"
+            android:textSize="@dimen/dates_text_size"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/tv_note_text"
             app:layout_constraintTop_toBottomOf="@+id/tv_creation_date"
-            tools:noteText="Last edited at 20/09/18 - 20:55" />
+            tools:noteText="Last edited at 20/09/18 - 20:55"
+            tools:text="Edited: 20/20/2018  - 08:50" />
 
         <TextView
             android:id="@+id/tv_reminder_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_alarm_grey_24dp"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:drawableStart="@drawable/ic_alarm_gray_14dp"
             android:gravity="center"
-            android:text="Reminder at 11/11/2018 - 08:50"
+            android:textSize="@dimen/dates_text_size"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/tv_note_text"
-            app:layout_constraintTop_toBottomOf="@+id/tv_edit_date" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_edit_date"
+            tools:text="Reminder: 11/11/2018 - 08:50" />
 
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/half_horizontal_margin"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_note_text" />

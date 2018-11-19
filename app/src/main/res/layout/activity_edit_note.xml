@@ -60,10 +60,12 @@
                     android:maxLines="2"
                     android:textColor="@android:color/black"
                     android:textSize="12sp"
+                    android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Add note to folder" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -93,13 +95,14 @@
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_alarm_grey_24dp"
                     android:gravity="center_vertical"
-                    android:text="20/20/2018 - 15:50"
                     android:textColor="@android:color/black"
                     android:textSize="12sp"
+                    android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Add reminder" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -136,14 +139,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:maxLines="2"
-                    android:text="Created: 10/10/2018 - 10:20"
                     android:textColor="@android:color/black"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Created: 10/10/2018 - 10:20" />
 
                 <TextView
                     android:id="@+id/tv_edit_date"
@@ -154,14 +157,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:maxLines="2"
-                    android:text="Edited: 15/10/2018 - 15:15"
                     android:textColor="@android:color/black"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Edited: 15/10/2018 - 15:15" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>

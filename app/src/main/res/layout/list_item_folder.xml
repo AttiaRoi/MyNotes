@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="2dp">
+    android:layout_marginBottom="@dimen/eighth_vertical_margin"
+    android:layout_marginEnd="@dimen/half_horizontal_margin"
+    android:layout_marginStart="@dimen/half_horizontal_margin"
+    android:layout_marginTop="@dimen/eighth_vertical_margin">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,18 +17,19 @@
             android:id="@+id/iv_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/regular_horizontal_margin"
             app:layout_constraintBottom_toBottomOf="@+id/tv_number_of_notes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_folder_name"
-            app:srcCompat="@mipmap/ic_filled_folder" />
+            app:srcCompat="@mipmap/ic_filled_folder"
+            android:contentDescription="@string/folder_list_item_image_content_description"/>
 
         <TextView
             android:id="@+id/tv_folder_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="@dimen/regular_horizontal_margin"
+            android:layout_marginTop="@dimen/regular_vertical_margin"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@android:color/black"
@@ -40,7 +41,7 @@
             android:id="@+id/tv_number_of_notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
             app:layout_constraintStart_toStartOf="@+id/tv_folder_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_folder_name"
             tools:noteText="Number of notes: 5" />
@@ -49,7 +50,7 @@
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/regular_vertical_margin"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,23 +60,25 @@
             android:id="@+id/iv_delete_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:padding="8dp"
+            android:layout_marginEnd="@dimen/regular_horizontal_margin"
+            android:padding="@dimen/half_horizontal_margin"
             app:layout_constraintBottom_toBottomOf="@+id/iv_folder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_folder"
-            app:srcCompat="@drawable/ic_delete_accent_24dp" />
+            app:srcCompat="@drawable/ic_delete_accent_24dp"
+            android:contentDescription="@string/folder_list_item_delete_button_content_description"/>
 
         <ImageView
             android:id="@+id/iv_new_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:padding="8dp"
+            android:layout_marginEnd="@dimen/quarter_horizontal_margin"
+            android:padding="@dimen/half_horizontal_margin"
             app:layout_constraintBottom_toBottomOf="@+id/iv_delete_folder"
             app:layout_constraintEnd_toStartOf="@+id/iv_delete_folder"
             app:layout_constraintTop_toTopOf="@+id/iv_delete_folder"
-            app:srcCompat="@drawable/ic_new_note_accent_24dp" />
+            app:srcCompat="@drawable/ic_new_note_accent_24dp"
+            android:contentDescription="@string/folder_list_item_new_note_button_content_description"/>
 
     </android.support.constraint.ConstraintLayout>
 

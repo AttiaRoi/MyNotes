@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "962071098081",
+    "firebase_url": "https://my-notes-d2c26.firebaseio.com",
+    "project_id": "my-notes-d2c26",
+    "storage_bucket": "my-notes-d2c26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962071098081:android:88a23192604d8389",
+        "android_client_info": {
+          "package_name": "roiattia.com.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "962071098081-7i88ek7rup51rdgaqt9eek87idlft1o6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "roiattia.com.mynotes",
+            "certificate_hash": "e43118afa0f09b18b3fd9dcc3f4c3209504f9771"
+          }
+        },
+        {
+          "client_id": "962071098081-sn5l56nu6v0lds8uge081ldvlmlk0598.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq4X-SmZYDbLHrMedzaIU7FL1BZnHTLxM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "962071098081-sn5l56nu6v0lds8uge081ldvlmlk0598.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

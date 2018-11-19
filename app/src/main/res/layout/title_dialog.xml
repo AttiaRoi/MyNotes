@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_dialog_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:padding="8dp"
+    android:background="@color/colorAccent"
+    android:padding="16dp"
     android:text="New Folder"
     android:textColor="@android:color/white"
-    android:textSize="18sp"
+    android:textSize="20sp"
     android:textStyle="bold">
 
 </TextView>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">הפתקים שלי</string>
+    <string name="edit_note">עריכת פתק</string>
+    <string name="new_note">פתק חדש</string>
+    <string name="dialog_confirm">אישור</string>
+    <string name="dialog_cancel">ביטול</string>
+    <string name="new_folder_dialog_example_17">שם לתיקייה</string>
+
+    <!-- NotesListActivity -->
+    <string name="no_notes_to_delete_message">אין פתקים למחיקה</string>
+    <string name="record_note_message">דבר/י להקלטת פתק</string>
+    <string name="search_hint">search hint</string>
+    <string name="delete_notes_button">מחק</string>
+    <string name="notes_list_empty_message">אין פתקים להראות…</string>
+    <!-- Fields dialog -->
+    <string name="fields_dialog_title">סמנו שדות להצגה</string>
+    <string name="fields_dialog_confirm">אישור</string>
+    <string name="creation_date">תאריך יצירה</string>
+    <string name="last_edit_date">תאריך עריכה</string>
+    <string name="reminder_date">תאריך תזכורת</string>
+    <string-array name="fields_selection_options">
+        <item>@string/creation_date</item>
+        <item>@string/last_edit_date</item>
+        <item>@string/reminder_date</item>
+    </string-array>
+    <!-- Note list item -->
+    <string name="note_created_at">נוצר:</string>
+    <string name="note_last_edited_at">נערך לאחרונה:</string>
+    <string name="note_reminder_at">תזכורת:</string>
+    <!-- Menu items -->
+    <string name="mi_note_info">הצגת מידע</string>
+    <string name="mi_search">חיפוש</string>
+    <string name="mi_delete_notes">מחיקת פתקים</string>
+    <string name="mi_folders">תיקיות</string>
+
+    <!-- EditNoteActivity -->
+    <string name="delete_note_dialog_title">מחיקת פתק</string>
+    <string name="note_deleted_toast_message">פתק נמחק בהצלחה!</string>
+    <string name="note_saved_toast_message">פתק נשמר בהצלחה!</string>
+    <string name="note_edited_toast_message">פתק נערך בהצלחה!</string>
+    <string name="note_is_empty_toast_message">הפתק ריק…</string>
+    <string name="add_note_to_folder_text">הוספת הפתק לתיקייה</string>
+    <string name="folder_name_required_toast_message">חסר שם לתיקייה</string>
+
+    <!-- FoldersListActivity -->
+    <string name="folder_activity_title">התיקיות שלי</string>
+    <string name="empty_folders_list_message">אין תיקיות להצגה…</string>
+    <!-- New folder dialog -->
+    <string name="new_folder_dialog_title">תיקייה חדשה</string>
+    <!-- Delete folder dialog -->
+    <string name="delete_folder_dialog_delete">מחיקת תיקיית</string>
+    <string name="delete_folder_dialog_folder"></string>
+    <string name="delete_folder_dialog_notes_count">פתקים יימחקו</string>
+    <string name="delete_folder_dialog_empty_folder">תיקייה ריקה</string>
+
+</resources>

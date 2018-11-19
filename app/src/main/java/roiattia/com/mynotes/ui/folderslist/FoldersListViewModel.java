@@ -21,14 +21,26 @@ public class FoldersListViewModel extends AndroidViewModel {
         mFoldersLiveData = mRepository.getFoldersItems();
     }
 
+    /**
+     * Handle folders list retrieval request
+     * @return LiveData object of a list of all the folders in the db
+     */
     public LiveData<List<FolderListItem>> getFoldersLiveData() {
         return mFoldersLiveData;
     }
 
+    /**
+     * Handle insert new folder to db request
+     * @param input the new folder's name
+     */
     public void insertFolder(String input) {
         mRepository.insertFolder(input);
     }
 
+    /**
+     * Handle delete folder request
+     * @param id the id of the folder to get deleted
+     */
     public void deleteFolderById(long id) {
         mRepository.deleteFolderById(id);
     }

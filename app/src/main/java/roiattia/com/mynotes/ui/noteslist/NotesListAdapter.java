@@ -88,25 +88,30 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     public void onBindViewHolder(@NonNull final NotesViewHolder holder, int position) {
         final NoteEntity note = mNotesList.get(position);
         holder.mNoteTextView.setText(note.getText());
+        // check if creation field is checked
         if(mSelectedFields[0]) {
             holder.mNoteCreationDateView.setVisibility(VISIBLE);
-            holder.mNoteCreationDateView.setText(String.format("Created at: %s",
+            holder.mNoteCreationDateView.setText(String.format("%s %s",
+                    mContext.getString(R.string.note_created_at),
                     TextFormat.getDateTimeStringFormat(note.getCreationDate())));
         } else {
             holder.mNoteCreationDateView.setVisibility(GONE);
         }
+        // check if last edit field is checked
         if(mSelectedFields[1]) {
             holder.mLastEditDateView.setVisibility(VISIBLE);
-            holder.mLastEditDateView.setText(String.format("Last edit at: %s",
+            holder.mLastEditDateView.setText(String.format("%s %s",
+                    mContext.getString(R.string.note_last_edited_at),
                     TextFormat.getDateTimeStringFormat(note.getLastEditDate())));
         } else {
             holder.mLastEditDateView.setVisibility(GONE);
         }
-        // check if note has reminder date
+        // check if reminder field is checked and if it's date is still valid
         if(mSelectedFields[2] && note.getReminderDate() != null &&
                 !note.getReminderDate().isBefore(new LocalDateTime())){
             holder.mReminderDateView.setVisibility(VISIBLE);
-            holder.mReminderDateView.setText(String.format("Reminder at: %s",
+            holder.mReminderDateView.setText(String.format("%s %s",
+                    mContext.getString(R.string.note_reminder_at),
                     TextFormat.getDateTimeStringFormat(note.getReminderDate())));
         } else {
             holder.mReminderDateView.setVisibility(GONE);

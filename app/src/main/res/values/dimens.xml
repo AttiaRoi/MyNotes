@@ -2,4 +2,20 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="regular_horizontal_margin">16dp</dimen>
+    <dimen name="regular_vertical_margin">16dp</dimen>
+    <dimen name="half_horizontal_margin">8dp</dimen>
+    <dimen name="half_vertical_margin">8dp</dimen>
+    <dimen name="quarter_horizontal_margin">4dp</dimen>
+    <dimen name="quarter_vertical_margin">4dp</dimen>
+    <dimen name="eighth_horizontal_margin">2dp</dimen>
+    <dimen name="eighth_vertical_margin">2dp</dimen>
+
+    <!-- Notes list activity -->
+    <dimen name="rv_top_margin">4dp</dimen>
+    <dimen name="cancel_button_end_margin">8dp</dimen>
+    <dimen name="delete_button_vertical_margin">4dp</dimen>
+    <dimen name="notes_list_empty_message_text_size">24sp</dimen>
+    <!-- Note list item -->
+    <dimen name="drawable_padding">4dp</dimen>
+    <dimen name="dates_text_size">12sp</dimen>
 </resources>

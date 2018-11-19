@@ -24,19 +24,37 @@ public class NotesListViewModel extends AndroidViewModel {
         mNotesRepository = NotesRepository.getInstance(application.getApplicationContext());
     }
 
+    /**
+     * Handle note list retrieval request
+     * @return LiveData object of List<NoteEntity> with all the notes in the db
+     */
     public LiveData<List<NoteEntity>> getNotesLiveData(){
         return mNotesRepository.getNotes();
     }
 
+    /**
+     * Handle delete notes request
+     * @param notesForDeletion the list of the notes to get deleted
+     */
     public void deleteNotes(List<NoteEntity> notesForDeletion) {
         mNotesRepository.deleteNotes(notesForDeletion);
     }
 
+    /**
+     * Handle note list of a specific folder retrieval request
+     * @param folderId the folder id of which notes are to fetch
+     * @return LiveData object of List<NoteEntity> with all the notes of the specific folder
+     */
     public LiveData<List<NoteEntity>> getNotesByFolderIdLiveData(long folderId) {
         return mNotesRepository.getNotesByFolderId(folderId);
     }
 
-    public void insertNewNote(String text) {
-        mNotesRepository.insertNote(new NoteEntity(new LocalDateTime(), new LocalDateTime(), text));
+    /**
+     * Handle new note request by record action
+     * @param text of the note to save
+     */
+    public void insertNoteByRecord(String text) {
+        NoteEntity note = new NoteEntity(new LocalDateTime(), new LocalDateTime(), text);
+        mNotesRepository.insertNote(note);
     }
 }

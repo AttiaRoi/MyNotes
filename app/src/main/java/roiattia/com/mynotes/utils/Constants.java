@@ -27,7 +27,6 @@ public class Constants {
 }
 
 
-//TODO: close dates issues
 //TODO: add show by function
 //TODO: add settings activity
 //TODO: translation

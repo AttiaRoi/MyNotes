@@ -3,22 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mi_note_list"
-        android:icon="@drawable/ic_note_check_list_white_24dp"
-        android:title="Note info"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/mi_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search"
+        android:title="@string/mi_search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_note_list"
+        android:icon="@drawable/ic_note_check_list_white_24dp"
+        android:title="@string/mi_note_info"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/mi_delete_notes"
         android:icon="@drawable/ic_delete"
-        android:title="Delete Notes" />
+        android:title="@string/mi_delete_notes" />
     <item
         android:id="@+id/mi_folders"
         android:icon="@drawable/ic_folder_white_24dp"
-        android:title="Folders" />
+        android:title="@string/mi_folders" />
 </menu>

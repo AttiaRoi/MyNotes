@@ -57,6 +57,7 @@ public class EditNoteActivity extends AppCompatActivity
     private boolean mIsNewNote, mIsInsideFolder;
     private List<FolderEntity> mFoldersList;
     private NoteEntity mNote;
+    // save the date and time of reminder
     private LocalDateTime mReminderDateTime;
     private Calendar mCalendar;
     // Dialogs
@@ -77,8 +78,6 @@ public class EditNoteActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
         ButterKnife.bind(this);
-
-        setTitle(getString(R.string.new_note));
 
         mNote = new NoteEntity();
         mReminderDateTime = new LocalDateTime();
@@ -270,14 +269,21 @@ public class EditNoteActivity extends AppCompatActivity
             // check for folder indicator extra
             if(intent.hasExtra(FOLDER_ID_KEY)){
                 long folderId = intent.getLongExtra(FOLDER_ID_KEY, 0);
-                Log.i("kinga", "handleIntent " + folderId);
                 mViewModel.loadFolder(folderId);
                 mIsInsideFolder = true;
             }
             if(intent.hasExtra(INSIDE_FOLDER)){
                 mIsInsideFolder = true;
             }
+        } else {
+            setupNewNote();
         }
+    }
+
+    private void setupNewNote() {
+        setTitle(getString(R.string.new_note));
+        mNote.setCreationDate(new LocalDateTime());
+        mNote.setLastEditDate(new LocalDateTime());
     }
 
     /**

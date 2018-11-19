@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.ui.dialogs;
+package roiattia.com.mynotes.ui.folderslist;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,17 +14,33 @@ import android.widget.TextView;
 
 import roiattia.com.mynotes.R;
 
-public class NewFolderDialog extends DialogFragment {
+public class DeleteFolderDialog extends DialogFragment {
 
-    private NewFolderDialogListener mListener;
+    private DeleteFolderDialogListener mListener;
     private String mTitle;
+    private String mMessage;
 
-    public interface NewFolderDialogListener {
-        void onFolderConfirmed(String input);
+    public interface DeleteFolderDialogListener {
+        /**
+         * Send back to the activity that confirm delete clicked
+         */
+        void onDeleteFolderConfirmed();
     }
 
+    /**
+     * Set the dialog's title
+     * @param title the title to show
+     */
     public void setTitle(String title){
         mTitle = title;
+    }
+
+    /**
+     * Set the dialog's message
+     * @param message the message to show
+     */
+    public void setMessage(String message){
+        mMessage = message;
     }
 
     @NonNull
@@ -32,19 +48,17 @@ public class NewFolderDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_edit_text, null, false);
         final View title = inflater.inflate(R.layout.title_dialog, null, false);
         TextView titleTextView = title.findViewById(R.id.tv_dialog_title);
         titleTextView.setText(mTitle);
 
-        builder.setView(view)
-                .setCustomTitle(title)
+        builder.setCustomTitle(title)
+                .setMessage(mMessage)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EditText editText = view.findViewById(R.id.et_user_input);
-                        mListener.onFolderConfirmed(editText.getText().toString());
+                        mListener.onDeleteFolderConfirmed();
                         dismiss();
 
                     }
@@ -62,11 +76,11 @@ public class NewFolderDialog extends DialogFragment {
         super.onAttach(context);
         try {
             // Instantiate the NewFolderDialogListener so we can send events to the host
-            mListener = (NewFolderDialogListener) context;
+            mListener = (DeleteFolderDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement NewFolderDialogListener");
+                    + " must implement DeleteFolderDialogListener");
         }
     }
 }

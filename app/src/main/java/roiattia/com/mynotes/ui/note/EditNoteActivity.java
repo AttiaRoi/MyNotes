@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -25,6 +26,7 @@ import com.google.android.gms.ads.AdView;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.database.repositories.FoldersRepository;
 import roiattia.com.mynotes.sync.NoteReminder;
 import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
+import roiattia.com.mynotes.ui.dialogs.ListDialog;
 import roiattia.com.mynotes.ui.dialogs.TextInputDialog;
 import roiattia.com.mynotes.utils.TextFormat;
 
@@ -46,7 +49,7 @@ import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REMINDER;
 
 public class EditNoteActivity extends AppCompatActivity
-    implements PickFolderDialog.FoldersDialogListener,
+    implements ListDialog.ListDialogListener,
         TextInputDialog.TextInputDialogListener, FoldersRepository.FoldersRepositoryListener,
         DeleteDialog.DeleteDialogListener {
 
@@ -61,7 +64,7 @@ public class EditNoteActivity extends AppCompatActivity
     private Calendar mCalendar;
     // Dialogs
     private DeleteDialog mDeleteNoteDialog;
-    private PickFolderDialog mAddToFolderDialog;
+    private ListDialog mAddToFolderDialog;
     private TextInputDialog mAddNewFolderDialog;
     private DatePickerDialog mDatePickerDialog;
     private TimePickerDialog mTimePickerDialog;
@@ -97,19 +100,7 @@ public class EditNoteActivity extends AppCompatActivity
         mDatePickerDialog.show();
     }
 
-    /**
-     * Handle remove note from folder dialog action
-     */
-    @Override
-    public void removeFromFolder() {
-        if(mNote.getFolderId() != null) {
-            mNote.setFolderId(null);
-            setCardViewPanelOff(FOLDER);
-            Toast.makeText(this, R.string.note_removed_from_folder_toast, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, R.string.note_not_in_folder_toast, Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     public void cancelReminder(){
         if(mNote.getReminderDate() != null){
@@ -161,35 +152,22 @@ public class EditNoteActivity extends AppCompatActivity
     @OnClick(R.id.cv_add_to_folder)
     public void addNoteToFolder(){
         if(mAddToFolderDialog == null){
-            mAddToFolderDialog = new PickFolderDialog();
+            mAddToFolderDialog = new ListDialog();
             mAddToFolderDialog.setTitle(getString(R.string.add_note_to_folder_dialog_title));
+            mAddToFolderDialog.setButtons("new folder", "cancel", "remove");
         }
-        mAddToFolderDialog.setFolders(mFoldersList);
+        if(mFoldersList.size() > 0) {
+            List<String> foldersNames = new ArrayList<>();
+            for (FolderEntity folder : mFoldersList)
+                foldersNames.add(folder.getName());
+            mAddToFolderDialog.setListItemsStrings(foldersNames.toArray(new String[foldersNames.size()]));
+        } else {
+            mAddToFolderDialog.setMessage("Click \"new folder\" to add new folder");
+        }
         mAddToFolderDialog.show(getSupportFragmentManager(), "folders_dialog");
     }
 
-    /**
-     * Handle folder picked from the dialog action
-     * @param folder the folder that was picked
-     */
-    @Override
-    public void onFolderPicked(FolderEntity folder) {
-        mNote.setFolderId(folder.getId());
-        setCardViewPanelOn(FOLDER, folder.getName());
-    }
 
-
-    /**
-     * Handle create new folder dialog action
-     */
-    @Override
-    public void onCreateNewFolder() {
-        if(mAddNewFolderDialog == null){
-            mAddNewFolderDialog = new TextInputDialog();
-            mAddNewFolderDialog.setTitle(getString(R.string.create_new_folder_dialog_title));
-        }
-        mAddNewFolderDialog.show(getSupportFragmentManager(), "new_folder");
-    }
 
     /**
      * Handle new folder confirmed dialog action
@@ -318,6 +296,7 @@ public class EditNoteActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<FolderEntity> folders) {
                 if(folders != null){
+                    Log.i(TAG, "onChanged");
                     mFoldersList = folders;
                 }
             }
@@ -480,4 +459,47 @@ public class EditNoteActivity extends AppCompatActivity
         }
         finish();
     }
+
+
+    /**
+     * Handle folder picked from the dialog action
+     * @param whichSelected the index of the selected folder
+     */
+    @Override
+    public void onItemSelected(int whichSelected) {
+        FolderEntity folder = mFoldersList.get(whichSelected);
+        mNote.setFolderId(folder.getId());
+        setCardViewPanelOn(FOLDER, folder.getName());
+    }
+
+    /**
+     * Handle create new folder dialog action
+     */
+    @Override
+    public void onPositiveSelected() {
+        if(mAddNewFolderDialog == null){
+            mAddNewFolderDialog = new TextInputDialog();
+            mAddNewFolderDialog.setTitle(getString(R.string.create_new_folder_dialog_title));
+        }
+        mAddNewFolderDialog.show(getSupportFragmentManager(), "new_folder");
+    }
+
+    /**
+     * Handle remove note from folder dialog action
+     */
+    @Override
+    public void onNeutralSelected() {
+        if(mNote.getFolderId() != null) {
+            mNote.setFolderId(null);
+            setCardViewPanelOff(FOLDER);
+            Toast.makeText(this, R.string.note_removed_from_folder_toast,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.note_not_in_folder_toast,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onNegativeSelected() { }
 }

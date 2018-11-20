@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -66,7 +67,7 @@ public class ListDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View title = inflater.inflate(R.layout.title_sort_note_by_dialog, null, false);
+        final View title = inflater.inflate(R.layout.title_dialog, null, false);
         TextView titleTextView = title.findViewById(R.id.tv_dialog_title);
         titleTextView.setText(mTitle);
 
@@ -81,7 +82,7 @@ public class ListDialog extends DialogFragment {
                     }
                 });
         if(mPositiveBtn != null){
-            builder.setNegativeButton(mPositiveBtn, new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(mPositiveBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mListener.onPositiveSelected();
@@ -99,7 +100,7 @@ public class ListDialog extends DialogFragment {
         }
 
         if(mNeutralBtn != null){
-            builder.setNegativeButton(mNeutralBtn, new DialogInterface.OnClickListener() {
+            builder.setNeutralButton(mNeutralBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mListener.onNeutralSelected();

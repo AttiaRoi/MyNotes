@@ -16,8 +16,7 @@ import roiattia.com.mynotes.R;
 public class DeleteDialog extends DialogFragment {
 
     private DeleteDialogListener mListener;
-    private String mTitle;
-    private String mMessage;
+    private String mTitle, mMessage;
 
     public interface DeleteDialogListener {
         /**

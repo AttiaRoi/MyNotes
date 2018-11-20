@@ -18,7 +18,7 @@ public class ListDialog extends DialogFragment {
     private static final String TAG = ListDialog.class.getSimpleName();
     private String[] mListItemsStrings;
     private ListDialogListener mListener;
-    private String mTitle;
+    private String mTitle, mMessage, mPositiveBtn, mNegativeBtn, mNeutralBtn;
 
     public interface ListDialogListener {
         /**
@@ -26,6 +26,9 @@ public class ListDialog extends DialogFragment {
          * @param whichSelected the selected item position
          */
         void onItemSelected(int whichSelected);
+        void onPositiveSelected();
+        void onNegativeSelected();
+        void onNeutralSelected();
     }
 
     /**
@@ -44,27 +47,71 @@ public class ListDialog extends DialogFragment {
         mTitle = title;
     }
 
+    /**
+     * Set the dialog's message
+     * @param message the message to show
+     */
+    public void setMessage(String message){
+        mMessage = message;
+    }
+
+    public void setButtons(String positiveBtn, String negativeBtn, String neutralBtn){
+        mPositiveBtn = positiveBtn;
+        mNegativeBtn = negativeBtn;
+        mNeutralBtn = neutralBtn;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View title = inflater.inflate(R.layout.title_sort_note_by_dialog, null, false);
         TextView titleTextView = title.findViewById(R.id.tv_dialog_title);
         titleTextView.setText(mTitle);
 
-        dialog.setCustomTitle(title)
+        builder.setCustomTitle(title)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setSingleChoiceItems(mListItemsStrings, -1, new DialogInterface.OnClickListener() {
+                .setItems(mListItemsStrings, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onItemSelected(which);
                         dismiss();
                     }
                 });
+        if(mPositiveBtn != null){
+            builder.setNegativeButton(mPositiveBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mListener.onPositiveSelected();
+                }
+            });
+        }
 
-        return dialog.create();
+        if(mNegativeBtn != null){
+            builder.setNegativeButton(mNegativeBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mListener.onNegativeSelected();
+                }
+            });
+        }
+
+        if(mNeutralBtn != null){
+            builder.setNegativeButton(mNeutralBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mListener.onNeutralSelected();
+                }
+            });
+        }
+
+        if(mMessage != null){
+            builder.setMessage(mMessage);
+        }
+
+        return builder.create();
     }
 
     @Override

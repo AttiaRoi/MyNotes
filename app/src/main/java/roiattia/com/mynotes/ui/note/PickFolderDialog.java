@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.folder.FolderEntity;
 
 public class PickFolderDialog extends DialogFragment {
@@ -19,6 +23,7 @@ public class PickFolderDialog extends DialogFragment {
     private String[] mFoldersNames;
     private List<FolderEntity> mFolders;
     private FoldersDialogListener mListener;
+    private String mTitle;
 
     public interface FoldersDialogListener {
         void onFolderPicked(FolderEntity folder);
@@ -34,11 +39,24 @@ public class PickFolderDialog extends DialogFragment {
         mFoldersNames = foldersNames.toArray(new String[foldersNames.size()]);
     }
 
+    /**
+     * Set the dialog's title
+     * @param title the title to show
+     */
+    public void setTitle(String title){
+        mTitle = title;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle("Pick a folder")
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View title = inflater.inflate(R.layout.title_dialog, null, false);
+        TextView titleTextView = title.findViewById(R.id.tv_dialog_title);
+        titleTextView.setText(mTitle);
+
+        builder.setCustomTitle(title)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
                 .setItems(mFoldersNames, new DialogInterface.OnClickListener() {
@@ -63,7 +81,10 @@ public class PickFolderDialog extends DialogFragment {
                         mListener.removeFromFolder();
                     }
                 });
-        return dialog.create();
+        if(mFolders.size() == 0){
+            builder.setMessage("Click \"New Folder\" to add folders");
+        }
+        return builder.create();
     }
 
     @Override

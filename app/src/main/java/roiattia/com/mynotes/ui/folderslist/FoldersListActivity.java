@@ -60,7 +60,7 @@ public class FoldersListActivity extends AppCompatActivity
         setContentView(R.layout.activity_folders);
         ButterKnife.bind(this);
 
-        setupAd();
+//        setupAd();
 
         setTitle(getString(R.string.folder_activity_title));
 

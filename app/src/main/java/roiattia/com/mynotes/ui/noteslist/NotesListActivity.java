@@ -84,7 +84,7 @@ public class NotesListActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes_list);
         ButterKnife.bind(this);
 
-        setupAd();
+//        setupAd();
 
         mNotesList = new ArrayList<>();
         mSelectedFields = new boolean[3];
@@ -123,11 +123,6 @@ public class NotesListActivity extends AppCompatActivity
     @OnClick(R.id.fab_add_note)
     public void addNote(){
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
-        // if inside a folder then send the folder's id as an extra to set the new note
-        // to this folder
-        if (mIsInsideFolder){
-            intent.putExtra(FOLDER_ID_KEY, mFolderId);
-        }
         startActivity(intent);
     }
 
@@ -139,9 +134,6 @@ public class NotesListActivity extends AppCompatActivity
     public void onNoteClick(long noteId) {
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         intent.putExtra(NOTE_ID_KEY, noteId);
-        if(mIsInsideFolder){
-            intent.putExtra(INSIDE_FOLDER, true);
-        }
         startActivity(intent);
     }
 

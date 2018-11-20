@@ -52,7 +52,8 @@ import static roiattia.com.mynotes.utils.Constants.REMINDER;
 
 public class EditNoteActivity extends AppCompatActivity
     implements PickFolderDialog.FoldersDialogListener,
-        NewFolderDialog.NewFolderDialogListener, FoldersRepository.FoldersRepositoryListener{
+        NewFolderDialog.NewFolderDialogListener, FoldersRepository.FoldersRepositoryListener,
+        DeleteNoteDialog.DeleteNoteDialogListener {
 
     private static final String TAG = EditNoteActivity.class.getSimpleName();
 
@@ -64,7 +65,7 @@ public class EditNoteActivity extends AppCompatActivity
     private LocalDateTime mReminderDateTime;
     private Calendar mCalendar;
     // Dialogs
-    private AlertDialog mDeleteNoteDialog;
+    private DeleteNoteDialog mDeleteNoteDialog;
     private PickFolderDialog mAddToFolderDialog;
     private NewFolderDialog mAddNewFolderDialog;
     private DatePickerDialog mDatePickerDialog;
@@ -82,12 +83,11 @@ public class EditNoteActivity extends AppCompatActivity
         setContentView(R.layout.activity_edit_note);
         ButterKnife.bind(this);
 
-        setupAd();
+//        setupAd();
 
         mNote = new NoteEntity();
         mReminderDateTime = new LocalDateTime();
         mCalendar = Calendar.getInstance();
-        mIsNewNote = true;
 
         setupViewModel();
 
@@ -110,9 +110,9 @@ public class EditNoteActivity extends AppCompatActivity
         if(mNote.getFolderId() != null) {
             mNote.setFolderId(null);
             setCardViewPanelOff(FOLDER);
-            Toast.makeText(this, "Note removed from folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.note_removed_from_folder_toast, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Note not in any folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.note_not_in_folder_toast, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -121,9 +121,9 @@ public class EditNoteActivity extends AppCompatActivity
             NoteReminder.cancelReminder(this, mNote.getId());
             mNote.setReminderDate(null);
             setCardViewPanelOff(REMINDER);
-            Toast.makeText(this, "Reminder canceled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.reminder_canceled_toast, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Reminder not set for this note", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.reminder_not_set_toast, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -138,7 +138,8 @@ public class EditNoteActivity extends AppCompatActivity
                     }
                 }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                 mCalendar.get(Calendar.DAY_OF_MONTH));
-        mDatePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "remove",
+        mDatePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL,
+                getString(R.string.date_picker_dialog_remove),
                 new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -166,6 +167,7 @@ public class EditNoteActivity extends AppCompatActivity
     public void addNoteToFolder(){
         if(mAddToFolderDialog == null){
             mAddToFolderDialog = new PickFolderDialog();
+            mAddToFolderDialog.setTitle(getString(R.string.add_note_to_folder_dialog_title));
         }
         mAddToFolderDialog.setFolders(mFoldersList);
         mAddToFolderDialog.show(getSupportFragmentManager(), "folders_dialog");
@@ -189,6 +191,7 @@ public class EditNoteActivity extends AppCompatActivity
     public void onCreateNewFolder() {
         if(mAddNewFolderDialog == null){
             mAddNewFolderDialog = new NewFolderDialog();
+            mAddNewFolderDialog.setTitle(getString(R.string.create_new_folder_dialog_title));
         }
         mAddNewFolderDialog.show(getSupportFragmentManager(), "new_folder");
     }
@@ -202,7 +205,8 @@ public class EditNoteActivity extends AppCompatActivity
         if(input.trim().length() > 0){
             mViewModel.inertNewFolder(input, EditNoteActivity.this);
         } else {
-            Toast.makeText(this, R.string.folder_name_required_toast_message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.folder_name_required_toast_message, Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
@@ -270,25 +274,25 @@ public class EditNoteActivity extends AppCompatActivity
                 long noteId = intent.getLongExtra(NOTE_ID_KEY, 0);
                 mViewModel.loadNote(noteId);
                 mIsNewNote = false;
+            } else {
+                setupNewNote();
             }
-            // check for folder indicator extra
-            if(intent.hasExtra(FOLDER_ID_KEY)){
-                long folderId = intent.getLongExtra(FOLDER_ID_KEY, 0);
-                mViewModel.loadFolder(folderId);
-                mIsInsideFolder = true;
-            }
-            if(intent.hasExtra(INSIDE_FOLDER)){
-                mIsInsideFolder = true;
-            }
-        } else {
-            setupNewNote();
         }
     }
 
     private void setupNewNote() {
+        mIsNewNote = true;
         setTitle(getString(R.string.new_note));
         mNote.setCreationDate(new LocalDateTime());
         mNote.setLastEditDate(new LocalDateTime());
+        mCreatedText.setText(String.format("%s %s",
+                getString(R.string.created),
+                TextFormat.getDateTimeStringFormat(mNote.getCreationDate())));
+        mEditedText.setText(String.format("%s %s",
+                getString(R.string.edited),
+                TextFormat.getDateTimeStringFormat(mNote.getLastEditDate())));
+        setCardViewPanelOff(FOLDER);
+        setCardViewPanelOff(REMINDER);
     }
 
     /**
@@ -305,6 +309,8 @@ public class EditNoteActivity extends AppCompatActivity
                     if(noteItem.getFolderId() == null){
                         setCardViewPanelOff(FOLDER);
                     } else {
+                        mIsInsideFolder = true;
+                        mViewModel.loadFolder(noteItem.getFolderId());
                         setCardViewPanelOn(FOLDER, noteItem.getFolderName());
                     }
                     mNoteText.setText(noteItem.getNoteText());
@@ -340,8 +346,12 @@ public class EditNoteActivity extends AppCompatActivity
         mNote.setCreationDate(noteItem.getCreationDate());
         mNote.setLastEditDate(noteItem.getLastEditDate());
         mNote.setReminderDate(noteItem.getReminderDate());
-        mCreatedText.setText("Created: " + TextFormat.getDateTimeStringFormat(mNote.getCreationDate()));
-        mEditedText.setText("Last edited: " + TextFormat.getDateTimeStringFormat(mNote.getLastEditDate()));
+        mCreatedText.setText(String.format("%s %s",
+                getString(R.string.created),
+                TextFormat.getDateTimeStringFormat(mNote.getCreationDate())));
+        mEditedText.setText(String.format("%s %s",
+                getString(R.string.edited),
+                TextFormat.getDateTimeStringFormat(mNote.getLastEditDate())));
         // check for reminder date
         if(mNote.getReminderDate() != null){
             LocalDateTime localDateTime = new LocalDateTime();
@@ -352,7 +362,8 @@ public class EditNoteActivity extends AppCompatActivity
                 setCardViewPanelOff(REMINDER);
                 mViewModel.saveNote(mNote);
             } else{
-                setCardViewPanelOn(REMINDER, TextFormat.getDateTimeStringFormat(mNote.getReminderDate()));
+                setCardViewPanelOn(REMINDER,
+                        TextFormat.getDateTimeStringFormat(mNote.getReminderDate()));
             }
         } else {
             setCardViewPanelOff(REMINDER);
@@ -364,28 +375,10 @@ public class EditNoteActivity extends AppCompatActivity
      */
     private void showAlertDialog() {
         if(mDeleteNoteDialog == null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            // set title
-            alertDialogBuilder.setTitle(R.string.delete_note_dialog_title);
-            // set dialog message
-            alertDialogBuilder
-                    .setCancelable(false)
-                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            deleteNote();
-                        }
-                    })
-                    .setNegativeButton("no", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // if this button is clicked, just close
-                            // the dialog box and do nothing
-                            dialog.cancel();
-                        }
-                    });
-
-            mDeleteNoteDialog = alertDialogBuilder.create();
+            mDeleteNoteDialog = new DeleteNoteDialog();
+            mDeleteNoteDialog.setTitle("Delete Note");
         }
-        mDeleteNoteDialog.show();
+        mDeleteNoteDialog.show(getSupportFragmentManager(), "delete_note_dialog");
     }
 
     /**
@@ -466,7 +459,7 @@ public class EditNoteActivity extends AppCompatActivity
                     R.drawable.ic_folder_gray_24dp,
                     0, 0, 0);
         } else if(type.equals(REMINDER)){
-            mReminderText.setText("Add reminder");
+            mReminderText.setText(R.string.add_reminder_text);
             mReminderText.setTextColor(Color.GRAY);
             mReminderText.setTypeface(null, Typeface.ITALIC);
             mReminderText.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -482,5 +475,14 @@ public class EditNoteActivity extends AppCompatActivity
         AdView adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+    }
+
+    @Override
+    public void onDeleteNoteConfirmed() {
+        mViewModel.deleteNote();
+        if(mNote.getReminderDate() != null){
+            NoteReminder.cancelReminder(this, mNote.getId());
+        }
+        finish();
     }
 }

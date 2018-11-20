@@ -42,6 +42,8 @@ public class NotificationUtils {
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(noteText)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(noteText))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context, noteId))
                 .setAutoCancel(true);

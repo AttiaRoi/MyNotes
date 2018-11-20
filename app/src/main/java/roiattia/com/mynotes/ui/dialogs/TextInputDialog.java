@@ -14,15 +14,19 @@ import android.widget.TextView;
 
 import roiattia.com.mynotes.R;
 
-public class NewFolderDialog extends DialogFragment {
+public class TextInputDialog extends DialogFragment {
 
-    private NewFolderDialogListener mListener;
+    private TextInputDialogListener mListener;
     private String mTitle;
 
-    public interface NewFolderDialogListener {
-        void onFolderConfirmed(String input);
+    public interface TextInputDialogListener {
+        void onInputConfirmed(String input);
     }
 
+    /**
+     * Set the dialog's title
+     * @param title the title to show
+     */
     public void setTitle(String title){
         mTitle = title;
     }
@@ -44,7 +48,7 @@ public class NewFolderDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText editText = view.findViewById(R.id.et_user_input);
-                        mListener.onFolderConfirmed(editText.getText().toString());
+                        mListener.onInputConfirmed(editText.getText().toString());
                         dismiss();
 
                     }
@@ -61,12 +65,12 @@ public class NewFolderDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            // Instantiate the NewFolderDialogListener so we can send events to the host
-            mListener = (NewFolderDialogListener) context;
+            // Instantiate the TextInputDialogListener so we can send events to the host
+            mListener = (TextInputDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement NewFolderDialogListener");
+                    + " must implement TextInputDialogListener");
         }
     }
 }

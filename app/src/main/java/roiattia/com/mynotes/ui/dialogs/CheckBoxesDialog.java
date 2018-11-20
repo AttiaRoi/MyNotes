@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.ui.noteslist;
+package roiattia.com.mynotes.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,33 +15,33 @@ import java.util.ArrayList;
 
 import roiattia.com.mynotes.R;
 
-public class FieldsDialog extends DialogFragment {
+public class CheckBoxesDialog extends DialogFragment {
 
-    private static final String TAG = SortDialog.class.getSimpleName();
-    private String[] mFieldsStrings;
-    private FieldsDialogListener mListener;
-    private boolean[] mSelectedFieldsBoolean;
-    private ArrayList<Integer> mSelectedItems;
+    private static final String TAG = ListDialog.class.getSimpleName();
+    private String[] mCheckBoxesStrings;
+    private CheckBoxesDialogListener mListener;
+    private boolean[] mSelectedCheckBoxesBooleanArray;
+    private ArrayList<Integer> mSelectedCheckBoxesList;
     private String mTitle;
 
-    public void setSelectedFieldsBoolean(boolean[] selectedFieldsBoolean) {
-        mSelectedFieldsBoolean = selectedFieldsBoolean;
-    }
-
-    public interface FieldsDialogListener {
+    public interface CheckBoxesDialogListener {
         /**
          * Sent selected fields representing integers back to the activity
          * @param selectedItems the integers array list
          */
-        void onDialogFinishClick(ArrayList<Integer> selectedItems);
+        void onConfirmSelection(ArrayList<Integer> selectedItems);
+    }
+
+    public void setSelectedCheckBoxesBooleanArray(boolean[] selectedFieldsBoolean) {
+        mSelectedCheckBoxesBooleanArray = selectedFieldsBoolean;
     }
 
     /**
      * Set the list of fields shown in the dialog
      * @param optionsList the strings array to show
      */
-    public void setFields(String[] optionsList){
-        mFieldsStrings = optionsList;
+    public void setCheckBoxesStrings(String[] optionsList){
+        mCheckBoxesStrings = optionsList;
     }
 
     /**
@@ -56,10 +56,10 @@ public class FieldsDialog extends DialogFragment {
      * Sets the selected items in an integer array_list from the
      * boolean array
      */
-    private void setSelectedItems() {
-        for(int i = 0; i< mSelectedFieldsBoolean.length; i++){
-            if(mSelectedFieldsBoolean[i]){
-                mSelectedItems.add(i);
+    private void setSelectedCheckBoxesList() {
+        for(int i = 0; i< mSelectedCheckBoxesBooleanArray.length; i++){
+            if(mSelectedCheckBoxesBooleanArray[i]){
+                mSelectedCheckBoxesList.add(i);
             }
         }
     }
@@ -67,8 +67,8 @@ public class FieldsDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mSelectedItems = new ArrayList<>();
-        setSelectedItems();
+        mSelectedCheckBoxesList = new ArrayList<>();
+        setSelectedCheckBoxesList();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -79,23 +79,23 @@ public class FieldsDialog extends DialogFragment {
         builder.setCustomTitle(title)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(mFieldsStrings, mSelectedFieldsBoolean,
+                .setMultiChoiceItems(mCheckBoxesStrings, mSelectedCheckBoxesBooleanArray,
                         new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
                             // If the user checked the item, add it to the selected items
-                            mSelectedItems.add(which);
-                        } else if (mSelectedItems.contains(which)) {
+                            mSelectedCheckBoxesList.add(which);
+                        } else if (mSelectedCheckBoxesList.contains(which)) {
                             // Else, if the item is already in the array, remove it
-                            mSelectedItems.remove(Integer.valueOf(which));
+                            mSelectedCheckBoxesList.remove(Integer.valueOf(which));
                         }
                     }
                 })
                 .setPositiveButton(R.string.fields_dialog_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogFinishClick(mSelectedItems);
+                        mListener.onConfirmSelection(mSelectedCheckBoxesList);
                     }
                 });
 
@@ -106,12 +106,12 @@ public class FieldsDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            // Instantiate the FieldsDialogListener to send events to the host
-            mListener = (FieldsDialogListener) context;
+            // Instantiate the CheckBoxesDialogListener to send events to the host
+            mListener = (CheckBoxesDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement FieldsDialogListener");
+                    + " must implement CheckBoxesDialogListener");
         }
     }
 }

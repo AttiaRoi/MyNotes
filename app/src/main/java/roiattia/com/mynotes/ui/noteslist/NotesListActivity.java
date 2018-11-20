@@ -35,6 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.note.NoteEntity;
+import roiattia.com.mynotes.ui.dialogs.CheckBoxesDialog;
+import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
 import roiattia.com.mynotes.ui.folderslist.FoldersListActivity;
 import roiattia.com.mynotes.ui.note.EditNoteActivity;
 import roiattia.com.mynotes.utils.PreferencesUtil;
@@ -43,13 +45,13 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.FOLDER_NAME_KEY;
-import static roiattia.com.mynotes.utils.Constants.INSIDE_FOLDER;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
 public class NotesListActivity extends AppCompatActivity
-    implements NotesListAdapter.OnNoteClick, FieldsDialog.FieldsDialogListener,
-    SharedPreferences.OnSharedPreferenceChangeListener{
+    implements NotesListAdapter.OnNoteClick, CheckBoxesDialog.CheckBoxesDialogListener,
+    SharedPreferences.OnSharedPreferenceChangeListener,
+    DeleteDialog.DeleteDialogListener{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
 
@@ -65,11 +67,12 @@ public class NotesListActivity extends AppCompatActivity
     private boolean mIsInsideFolder;
     // folder id for notes retrieval
     private long mFolderId;
-    private FieldsDialog mFieldsDialog;
+    private CheckBoxesDialog mFieldsDialog;
     // array representing the fields dialog show options
     private boolean[] mSelectedFields;
+    private DeleteDialog mDeleteNotesDialog;
 
-    //    private SortDialog mNoteSortDialog;
+    //    private ListDialog mNoteSortDialog;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
     @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
@@ -204,19 +207,19 @@ public class NotesListActivity extends AppCompatActivity
 
 //    private void showSortDialog() {
 //        if(mNoteSortDialog == null){
-//            mNoteSortDialog = new SortDialog();
-//            mNoteSortDialog.setSortOptions(getResources().getStringArray(R.array.fields_selection_options));
+//            mNoteSortDialog = new ListDialog();
+//            mNoteSortDialog.setListItemsStrings(getResources().getStringArray(R.array.fields_selection_options));
 //        }
 //        mNoteSortDialog.show(getSupportFragmentManager(), "sort_dialog");
 //    }
 
     private void showFieldsDialog() {
         if(mFieldsDialog == null){
-            mFieldsDialog = new FieldsDialog();
-            mFieldsDialog.setFields(getResources().getStringArray(R.array.fields_selection_options));
+            mFieldsDialog = new CheckBoxesDialog();
+            mFieldsDialog.setCheckBoxesStrings(getResources().getStringArray(R.array.fields_selection_options));
             mFieldsDialog.setTitle(getString(R.string.fields_dialog_title));
         }
-        mFieldsDialog.setSelectedFieldsBoolean(mSelectedFields);
+        mFieldsDialog.setSelectedCheckBoxesBooleanArray(mSelectedFields);
         mFieldsDialog.show(getSupportFragmentManager(), "fields_dialog");
     }
 
@@ -286,11 +289,18 @@ public class NotesListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 // delete all notes selected
-                mViewModel.deleteNotes(mNotesForDeletion);
-                mNotesAdapter.notifyDataSetChanged();
-                setupLayout(false);
+                showDeleteDialog();
             }
         });
+    }
+
+    private void showDeleteDialog() {
+        if(mDeleteNotesDialog == null){
+            mDeleteNotesDialog = new DeleteDialog();
+            mDeleteNotesDialog.setTitle("Delete Notes");
+        }
+        mDeleteNotesDialog.setMessage(mNotesForDeletion.size() + " notes will be deleted");
+        mDeleteNotesDialog.show(getSupportFragmentManager(), "delete_notes_dialog");
     }
 
     /**
@@ -376,7 +386,7 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDialogFinishClick(ArrayList<Integer> selectedItems) {
+    public void onConfirmSelection(ArrayList<Integer> selectedItems) {
         PreferencesUtil.setFields(this, selectedItems);
     }
 
@@ -400,4 +410,10 @@ public class NotesListActivity extends AppCompatActivity
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onDeleteConfirmed() {
+        mViewModel.deleteNotes(mNotesForDeletion);
+        mNotesAdapter.notifyDataSetChanged();
+        setupLayout(false);
+    }
 }

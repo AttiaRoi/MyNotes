@@ -10,16 +10,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -41,19 +37,18 @@ import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.database.repositories.FoldersRepository;
 import roiattia.com.mynotes.sync.NoteReminder;
-import roiattia.com.mynotes.ui.dialogs.NewFolderDialog;
+import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
+import roiattia.com.mynotes.ui.dialogs.TextInputDialog;
 import roiattia.com.mynotes.utils.TextFormat;
 
 import static roiattia.com.mynotes.utils.Constants.FOLDER;
-import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
-import static roiattia.com.mynotes.utils.Constants.INSIDE_FOLDER;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REMINDER;
 
 public class EditNoteActivity extends AppCompatActivity
     implements PickFolderDialog.FoldersDialogListener,
-        NewFolderDialog.NewFolderDialogListener, FoldersRepository.FoldersRepositoryListener,
-        DeleteNoteDialog.DeleteNoteDialogListener {
+        TextInputDialog.TextInputDialogListener, FoldersRepository.FoldersRepositoryListener,
+        DeleteDialog.DeleteDialogListener {
 
     private static final String TAG = EditNoteActivity.class.getSimpleName();
 
@@ -65,9 +60,9 @@ public class EditNoteActivity extends AppCompatActivity
     private LocalDateTime mReminderDateTime;
     private Calendar mCalendar;
     // Dialogs
-    private DeleteNoteDialog mDeleteNoteDialog;
+    private DeleteDialog mDeleteNoteDialog;
     private PickFolderDialog mAddToFolderDialog;
-    private NewFolderDialog mAddNewFolderDialog;
+    private TextInputDialog mAddNewFolderDialog;
     private DatePickerDialog mDatePickerDialog;
     private TimePickerDialog mTimePickerDialog;
 
@@ -190,7 +185,7 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public void onCreateNewFolder() {
         if(mAddNewFolderDialog == null){
-            mAddNewFolderDialog = new NewFolderDialog();
+            mAddNewFolderDialog = new TextInputDialog();
             mAddNewFolderDialog.setTitle(getString(R.string.create_new_folder_dialog_title));
         }
         mAddNewFolderDialog.show(getSupportFragmentManager(), "new_folder");
@@ -201,7 +196,7 @@ public class EditNoteActivity extends AppCompatActivity
      * @param input the new folder's name
      */
     @Override
-    public void onFolderConfirmed(String input) {
+    public void onInputConfirmed(String input) {
         if(input.trim().length() > 0){
             mViewModel.inertNewFolder(input, EditNoteActivity.this);
         } else {
@@ -375,7 +370,7 @@ public class EditNoteActivity extends AppCompatActivity
      */
     private void showAlertDialog() {
         if(mDeleteNoteDialog == null) {
-            mDeleteNoteDialog = new DeleteNoteDialog();
+            mDeleteNoteDialog = new DeleteDialog();
             mDeleteNoteDialog.setTitle("Delete Note");
         }
         mDeleteNoteDialog.show(getSupportFragmentManager(), "delete_note_dialog");
@@ -478,7 +473,7 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDeleteNoteConfirmed() {
+    public void onDeleteConfirmed() {
         mViewModel.deleteNote();
         if(mNote.getReminderDate() != null){
             NoteReminder.cancelReminder(this, mNote.getId());

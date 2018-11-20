@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.ui.folderslist;
+package roiattia.com.mynotes.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,22 +9,21 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import roiattia.com.mynotes.R;
 
-public class DeleteFolderDialog extends DialogFragment {
+public class DeleteDialog extends DialogFragment {
 
-    private DeleteFolderDialogListener mListener;
+    private DeleteDialogListener mListener;
     private String mTitle;
     private String mMessage;
 
-    public interface DeleteFolderDialogListener {
+    public interface DeleteDialogListener {
         /**
          * Send back to the activity that confirm delete clicked
          */
-        void onDeleteFolderConfirmed();
+        void onDeleteConfirmed();
     }
 
     /**
@@ -53,12 +52,11 @@ public class DeleteFolderDialog extends DialogFragment {
         titleTextView.setText(mTitle);
 
         builder.setCustomTitle(title)
-                .setMessage(mMessage)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onDeleteFolderConfirmed();
+                        mListener.onDeleteConfirmed();
                         dismiss();
 
                     }
@@ -68,6 +66,10 @@ public class DeleteFolderDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) { }
                 });
 
+        if(mMessage != null){
+            builder.setMessage(mMessage);
+        }
+
         return builder.create();
     }
 
@@ -75,12 +77,12 @@ public class DeleteFolderDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            // Instantiate the NewFolderDialogListener so we can send events to the host
-            mListener = (DeleteFolderDialogListener) context;
+            // Instantiate the TextInputDialogListener so we can send events to the host
+            mListener = (DeleteDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement DeleteFolderDialogListener");
+                    + " must implement DeleteDialogListener");
         }
     }
 }

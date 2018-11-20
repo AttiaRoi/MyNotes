@@ -20,20 +20,17 @@ public interface FolderDao {
     @Insert
     long insertFolderWithCallback(FolderEntity folderEntity);
 
-    @Delete
-    void deleteFolder(FolderEntity folderEntity);
-
-    @Query("SELECT * FROM folder WHERE id = :id")
+    @Query("SELECT * FROM folder WHERE folder_id = :id")
     FolderEntity getFolderById(long id);
 
     @Query("SELECT * FROM folder")
     LiveData<List<FolderEntity>> getAllFolders();
 
-    @Query("SELECT folder.name AS mName, folder.id AS mId, COUNT(note.note_id) AS mNotesCount " +
-            "FROM folder LEFT JOIN note ON folder.id = note.folder_id " +
-            "GROUP BY folder.id ORDER BY COUNT(note.note_id) DESC")
+    @Query("SELECT folder.folder_name AS mName, folder.folder_id AS mId, COUNT(note.note_id) AS mNotesCount " +
+            "FROM folder LEFT JOIN note ON folder.folder_id = note.folder_id " +
+            "GROUP BY folder.folder_id ORDER BY COUNT(note.note_id) DESC")
     LiveData<List<FolderListItem>> getAllFoldersItems();
 
-    @Query("DELETE FROM folder WHERE id=:id")
+    @Query("DELETE FROM folder WHERE folder_id=:id")
     void deleteFolderById(long id);
 }

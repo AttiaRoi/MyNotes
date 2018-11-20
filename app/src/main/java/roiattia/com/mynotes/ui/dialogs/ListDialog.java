@@ -14,12 +14,21 @@ import android.widget.TextView;
 
 import roiattia.com.mynotes.R;
 
+import static roiattia.com.mynotes.utils.Constants.EMPTY_STRING;
+
 public class ListDialog extends DialogFragment {
 
     private static final String TAG = ListDialog.class.getSimpleName();
     private String[] mListItemsStrings;
     private ListDialogListener mListener;
     private String mTitle, mMessage, mPositiveBtn, mNegativeBtn, mNeutralBtn;
+
+    public ListDialog(){
+        mMessage = EMPTY_STRING;
+        mPositiveBtn = EMPTY_STRING;
+        mNegativeBtn = EMPTY_STRING;
+        mNeutralBtn = EMPTY_STRING;
+    }
 
     public interface ListDialogListener {
         /**
@@ -81,7 +90,7 @@ public class ListDialog extends DialogFragment {
                         dismiss();
                     }
                 });
-        if(mPositiveBtn != null){
+        if(!mPositiveBtn.equals(EMPTY_STRING)){
             builder.setPositiveButton(mPositiveBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -90,7 +99,7 @@ public class ListDialog extends DialogFragment {
             });
         }
 
-        if(mNegativeBtn != null){
+        if(!mNegativeBtn.equals(EMPTY_STRING)){
             builder.setNegativeButton(mNegativeBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -99,7 +108,7 @@ public class ListDialog extends DialogFragment {
             });
         }
 
-        if(mNeutralBtn != null){
+        if(!mNeutralBtn.equals(EMPTY_STRING)){
             builder.setNeutralButton(mNeutralBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -108,7 +117,7 @@ public class ListDialog extends DialogFragment {
             });
         }
 
-        if(mMessage != null){
+        if(!mMessage.equals(EMPTY_STRING)){
             builder.setMessage(mMessage);
         }
 

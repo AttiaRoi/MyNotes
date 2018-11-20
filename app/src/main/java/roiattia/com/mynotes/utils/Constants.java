@@ -24,6 +24,8 @@ public class Constants {
     public static final String FOLDER = "folder";
     public static final String REMINDER = "reminder";
 
+    public static final String EMPTY_STRING = "empty_string";
+
 }
 
 

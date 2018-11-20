@@ -22,9 +22,9 @@ public interface NoteDao {
 
     @Query("SELECT note.note_id AS mNoteId,note.creation_date AS mCreationDate, " +
             "note.last_edit_date AS mLastEditDate, note.reminder_date AS mReminderDate, " +
-            "note.note_text AS mNoteText, folder.name AS mFolderName, " +
-            "folder.id AS mFolderId FROM note LEFT JOIN folder on " +
-            "note.folder_id = folder.id WHERE note.note_id =:id")
+            "note.note_text AS mNoteText, folder.folder_name AS mFolderName, " +
+            "folder.folder_id AS mFolderId FROM note LEFT JOIN folder on " +
+            "note.folder_id = folder.folder_id WHERE note.note_id =:id")
     NoteItem getNoteById(long id);
 
     @Query("SELECT * FROM note ORDER BY last_edit_date DESC")

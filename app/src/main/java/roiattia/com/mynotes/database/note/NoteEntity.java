@@ -14,7 +14,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "note",
         foreignKeys = @ForeignKey(entity = FolderEntity.class,
-        parentColumns = "id",
+        parentColumns = "folder_id",
         childColumns = "folder_id",
         onDelete = CASCADE))
 public class NoteEntity {

@@ -13,10 +13,16 @@ import android.widget.TextView;
 
 import roiattia.com.mynotes.R;
 
+import static roiattia.com.mynotes.utils.Constants.EMPTY_STRING;
+
 public class DeleteDialog extends DialogFragment {
 
     private DeleteDialogListener mListener;
     private String mTitle, mMessage;
+
+    public DeleteDialog(){
+        mMessage = EMPTY_STRING;
+    }
 
     public interface DeleteDialogListener {
         /**
@@ -65,7 +71,7 @@ public class DeleteDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) { }
                 });
 
-        if(mMessage != null){
+        if(!mMessage.equals(EMPTY_STRING)){
             builder.setMessage(mMessage);
         }
 

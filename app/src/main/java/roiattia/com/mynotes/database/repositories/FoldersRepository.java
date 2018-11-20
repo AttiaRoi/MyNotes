@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class FoldersRepository {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                FolderEntity folder = new FolderEntity(new LocalDate(), input, 0);
+                FolderEntity folder = new FolderEntity(new LocalDateTime(), input);
                 mDatabase.folderDao().insertFolder(folder);
             }
         });
@@ -70,7 +71,7 @@ public class FoldersRepository {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                FolderEntity folder = new FolderEntity(new LocalDate(), input, 0);
+                FolderEntity folder = new FolderEntity(new LocalDateTime(), input);
                 long id = mDatabase.folderDao().insertFolderWithCallback(folder);
                 folder.setId(id);
                 listener.onFolderInserted(folder);

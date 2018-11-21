@@ -32,14 +32,9 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     private boolean[] mSelectedFields;
     private boolean mShowCheckBoxes;
 
-    NotesListAdapter(Context context, OnNoteClick clickListener) {
+    public NotesListAdapter(Context context, OnNoteClick clickListener) {
         mContext = context;
         mClickListener = clickListener;
-    }
-
-    public void setSelectedFields(boolean[] selectedFields) {
-        mSelectedFields = selectedFields;
-        notifyDataSetChanged();
     }
 
     public interface OnNoteClick{
@@ -56,6 +51,14 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
          * @param addForDeletion the checkbox check status
          */
         void onCheckBoxChecked(NoteEntity noteEntity, boolean addForDeletion);
+    }
+
+    /**
+     * Set fields with boolean values indicates whether to show it
+     * @param selectedFields boolean array representing available fields
+     */
+    public void setSelectedFields(boolean[] selectedFields) {
+        mSelectedFields = selectedFields;
     }
 
     /**

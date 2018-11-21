@@ -30,6 +30,15 @@ public class FoldersRepository {
         });
     }
 
+    public void updateFolder(final FolderEntity folder) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.folderDao().insertFolder(folder);
+            }
+        });
+    }
+
     public interface FoldersRepositoryListener{
         void onFolderInserted(FolderEntity folder);
     }

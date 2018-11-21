@@ -22,12 +22,14 @@ public class ListDialog extends DialogFragment {
     private String[] mListItemsStrings;
     private ListDialogListener mListener;
     private String mTitle, mMessage, mPositiveBtn, mNegativeBtn, mNeutralBtn;
+    private int mCheckedItem;
 
     public ListDialog(){
         mMessage = EMPTY_STRING;
         mPositiveBtn = EMPTY_STRING;
         mNegativeBtn = EMPTY_STRING;
         mNeutralBtn = EMPTY_STRING;
+        mCheckedItem = -1;
     }
 
     public interface ListDialogListener {
@@ -71,6 +73,10 @@ public class ListDialog extends DialogFragment {
         mNeutralBtn = neutralBtn;
     }
 
+    public void setCheckedItem(int checkedItem){
+        mCheckedItem = checkedItem;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class ListDialog extends DialogFragment {
         builder.setCustomTitle(title)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setItems(mListItemsStrings, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(mListItemsStrings, mCheckedItem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onItemSelected(which);

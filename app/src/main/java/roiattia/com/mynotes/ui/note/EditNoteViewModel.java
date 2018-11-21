@@ -81,4 +81,8 @@ public class EditNoteViewModel extends AndroidViewModel {
     public void inertNewFolder(String input, FoldersRepository.FoldersRepositoryListener listener) {
         mFoldersRepository.insertFolder(input, listener);
     }
+
+    public void saveFolder(FolderEntity folder) {
+        mFoldersRepository.updateFolder(folder);
+    }
 }

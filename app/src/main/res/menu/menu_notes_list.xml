@@ -16,9 +16,21 @@
     <item
         android:id="@+id/mi_delete_notes"
         android:icon="@drawable/ic_delete"
-        android:title="@string/mi_delete_notes" />
+        android:title="@string/mi_delete_notes"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/mi_folders"
         android:icon="@drawable/ic_folder_white_24dp"
-        android:title="@string/mi_folders" />
+        android:title="@string/mi_folders"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_sort_notes_by"
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:title="Sort by"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_swap_list"
+        android:icon="@drawable/ic_swap_white_24dp"
+        android:title="Change order"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -3,6 +3,7 @@ package roiattia.com.mynotes.ui.noteslist;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import org.joda.time.LocalDate;
@@ -18,18 +19,18 @@ import roiattia.com.mynotes.database.note.NoteEntity;
 public class NotesListViewModel extends AndroidViewModel {
 
     private NotesRepository mNotesRepository;
+    private AppExecutors mExecutors;
+    private MutableLiveData<List<NoteEntity>> mMutableLiveDataNotes;
 
     public NotesListViewModel(@NonNull Application application) {
         super(application);
         mNotesRepository = NotesRepository.getInstance(application.getApplicationContext());
+        mExecutors = AppExecutors.getInstance();
+        mMutableLiveDataNotes = new MutableLiveData<>();
     }
 
-    /**
-     * Handle note list retrieval request
-     * @return LiveData object of List<NoteEntity> with all the notes in the db
-     */
-    public LiveData<List<NoteEntity>> getNotesLiveData(){
-        return mNotesRepository.getNotes();
+    public MutableLiveData<List<NoteEntity>> getMutableLiveDataNotes() {
+        return mMutableLiveDataNotes;
     }
 
     /**
@@ -41,20 +42,58 @@ public class NotesListViewModel extends AndroidViewModel {
     }
 
     /**
-     * Handle note list of a specific folder retrieval request
-     * @param folderId the folder id of which notes are to fetch
-     * @return LiveData object of List<NoteEntity> with all the notes of the specific folder
-     */
-    public LiveData<List<NoteEntity>> getNotesByFolderIdLiveData(long folderId) {
-        return mNotesRepository.getNotesByFolderId(folderId);
-    }
-
-    /**
      * Handle new note request by record action
      * @param text of the note to save
      */
     public void insertNoteByRecord(String text) {
         NoteEntity note = new NoteEntity(new LocalDateTime(), new LocalDateTime(), text);
         mNotesRepository.insertNote(note);
+    }
+
+    public void loadNotesByCreationDate() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<NoteEntity> notes = mNotesRepository.getNotesByCreationDate();
+                mMutableLiveDataNotes.postValue(notes);
+            }
+        });
+    }
+
+    public void loadNotesByLastEditDate() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<NoteEntity> notes = mNotesRepository.getNotesByLastEditDate();
+                mMutableLiveDataNotes.postValue(notes);
+            }
+        });
+    }
+
+    public void loadNotesByReminderDate() {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<NoteEntity> notes = mNotesRepository.loadNotesByReminderDate();
+                mMutableLiveDataNotes.postValue(notes);
+            }
+        });
+    }
+
+    /***********************************************************************************************
+     * Handle note list retrieval request
+     * @return LiveData object of List<NoteEntity> with all the notes in the db
+     */
+    public LiveData<List<NoteEntity>> getNotesLiveData(){
+        return mNotesRepository.getNotes();
+    }
+
+    /**
+     * Handle note list of a specific folder retrieval request
+     * @param folderId the folder id of which notes are to fetch
+     * @return LiveData object of List<NoteEntity> with all the notes of the specific folder
+     */
+    public LiveData<List<NoteEntity>> getNotesByFolderIdLiveData(long folderId) {
+        return mNotesRepository.getNotesByFolderId(folderId);
     }
 }

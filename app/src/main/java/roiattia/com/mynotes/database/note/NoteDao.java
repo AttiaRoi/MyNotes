@@ -41,4 +41,13 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note WHERE folder_id=:folderId ORDER BY last_edit_date DESC")
     LiveData<List<NoteEntity>> getNotesByFolderId(long folderId);
+
+    @Query("SELECT * FROM note ORDER BY creation_date DESC")
+    List<NoteEntity> getNotesByCreationDate();
+
+    @Query("SELECT * FROM note ORDER BY last_edit_date DESC")
+    List<NoteEntity> getNotesByLastEditDate();
+
+    @Query("SELECT * FROM note ORDER BY reminder_date DESC")
+    List<NoteEntity> loadNotesByReminderDate();
 }

@@ -1,4 +1,4 @@
-package roiattia.com.mynotes.sync;
+package roiattia.com.mynotes.utils;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

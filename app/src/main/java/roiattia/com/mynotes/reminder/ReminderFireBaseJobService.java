@@ -1,16 +1,15 @@
-package roiattia.com.mynotes.sync;
+package roiattia.com.mynotes.reminder;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
 import java.lang.ref.WeakReference;
 
-import static roiattia.com.mynotes.utils.Constants.NOTE_ID_EXTRA;
+import roiattia.com.mynotes.utils.NotificationUtils;
+
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_TEXT_EXTRA;
 

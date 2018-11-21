@@ -14,11 +14,7 @@
     <string name="creation_date">Creation date</string>
     <string name="last_edit_date">Last edit date</string>
     <string name="reminder_date">Reminder date</string>
-    <string-array name="fields_selection_options">
-        <item>@string/creation_date</item>
-        <item>@string/last_edit_date</item>
-        <item>@string/reminder_date</item>
-    </string-array>
+
     <!-- Note list item -->
     <string name="note_created_at">Created at:</string>
     <string name="note_last_edited_at">Last edited at:</string>
@@ -68,6 +64,8 @@
     <string name="add_reminder_text">Add reminder</string>
     <string name="add_note_to_folder_dialog_title">Add Note To Folder</string>
     <string name="create_new_folder_dialog_title">Create New Folder</string>
+    <string name="title_activity_folder">FolderActivity</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>

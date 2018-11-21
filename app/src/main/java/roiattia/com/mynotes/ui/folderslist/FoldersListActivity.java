@@ -29,6 +29,7 @@ import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
 import roiattia.com.mynotes.ui.dialogs.TextInputDialog;
 import roiattia.com.mynotes.ui.note.EditNoteActivity;
 import roiattia.com.mynotes.ui.noteslist.NotesListActivity;
+import roiattia.com.mynotes.utils.SearchUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -160,32 +161,12 @@ public class FoldersListActivity extends AppCompatActivity
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                searchFolders(newText);
+            public boolean onQueryTextChange(String query) {
+                mFoldersAdapter.setFoldersList(SearchUtils.findFolders(mFolderListItems, query));
                 return false;
             }
         });
         return true;
-    }
-
-    /**
-     * Handle search query
-     * @param newText the query to search on
-     */
-    private void searchFolders(String newText) {
-        // check if list instantiated, if it is then empty it for new query
-        if(mSearchedFolders == null){
-            mSearchedFolders = new ArrayList<>();
-        } else {
-            mSearchedFolders.clear();
-        }
-        // search for folders in the entire folders list
-        for(FolderListItem folder : mFolderListItems){
-            if(folder.getName().toLowerCase().contains(newText.toLowerCase())){
-                mSearchedFolders.add(folder);
-            }
-        }
-        mFoldersAdapter.setFoldersList(mSearchedFolders);
     }
 
     /**

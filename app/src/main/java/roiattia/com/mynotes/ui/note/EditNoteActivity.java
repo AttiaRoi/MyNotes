@@ -38,7 +38,7 @@ import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.database.repositories.FoldersRepository;
-import roiattia.com.mynotes.sync.NoteReminder;
+import roiattia.com.mynotes.reminder.NoteReminder;
 import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
 import roiattia.com.mynotes.ui.dialogs.ListDialog;
 import roiattia.com.mynotes.ui.dialogs.TextInputDialog;
@@ -468,6 +468,10 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public void onItemSelected(int whichSelected) {
         FolderEntity folder = mFoldersList.get(whichSelected);
+        // update FolderEntity with last note inserted date
+        folder.setLastNoteInsertedDate(new LocalDateTime());
+        // update folder in db
+        mViewModel.saveFolder(folder);
         mNote.setFolderId(folder.getId());
         setCardViewPanelOn(FOLDER, folder.getName());
     }
@@ -500,6 +504,9 @@ public class EditNoteActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handle cancel dialog action
+     */
     @Override
     public void onNegativeSelected() { }
 }

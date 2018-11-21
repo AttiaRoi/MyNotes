@@ -1,9 +1,7 @@
-package roiattia.com.mynotes.sync;
+package roiattia.com.mynotes.reminder;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.Log;
 
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -18,10 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import roiattia.com.mynotes.database.note.NoteEntity;
 
-import static com.firebase.jobdispatcher.Lifetime.FOREVER;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_TEXT_EXTRA;
-import static roiattia.com.mynotes.utils.Constants.REMINDER_JOB_TAG;
 
 public class NoteReminder {
 

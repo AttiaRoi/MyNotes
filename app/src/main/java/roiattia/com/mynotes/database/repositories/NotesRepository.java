@@ -71,4 +71,16 @@ public class NotesRepository {
     public LiveData<List<NoteEntity>> getNotesByFolderId(long folderId) {
         return mDatabase.noteDao().getNotesByFolderId(folderId);
     }
+
+    public List<NoteEntity> getNotesByCreationDate() {
+        return mDatabase.noteDao().getNotesByCreationDate();
+    }
+
+    public List<NoteEntity> getNotesByLastEditDate() {
+        return mDatabase.noteDao().getNotesByLastEditDate();
+    }
+
+    public List<NoteEntity> loadNotesByReminderDate() {
+        return mDatabase.noteDao().loadNotesByReminderDate();
+    }
 }

@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,21 +38,26 @@ import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.note.NoteEntity;
 import roiattia.com.mynotes.ui.dialogs.CheckBoxesDialog;
 import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
+import roiattia.com.mynotes.ui.dialogs.ListDialog;
 import roiattia.com.mynotes.ui.folderslist.FoldersListActivity;
 import roiattia.com.mynotes.ui.note.EditNoteActivity;
 import roiattia.com.mynotes.utils.PreferencesUtil;
+import roiattia.com.mynotes.utils.SearchUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
-import static roiattia.com.mynotes.utils.Constants.FOLDER_NAME_KEY;
+import static roiattia.com.mynotes.utils.Constants.EMPTY_STRING;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
+import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_CREATION_DATE;
+import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_LAST_EDIT_DATE;
+import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_REMINDER_DATE;
+import static roiattia.com.mynotes.utils.Constants.PREF_SORT_NOTE_BY_OPTION;
 import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
 public class NotesListActivity extends AppCompatActivity
     implements NotesListAdapter.OnNoteClick, CheckBoxesDialog.CheckBoxesDialogListener,
     SharedPreferences.OnSharedPreferenceChangeListener,
-    DeleteDialog.DeleteDialogListener{
+    DeleteDialog.DeleteDialogListener, ListDialog.ListDialogListener{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
 
@@ -59,20 +65,11 @@ public class NotesListActivity extends AppCompatActivity
     private NotesListViewModel mViewModel;
     // the entire notes list
     private List<NoteEntity> mNotesList;
-    // notes that meet a search query
-    private List<NoteEntity> mSearchedNotes;
     // notes list that are checked for deletion
     private List<NoteEntity> mNotesForDeletion;
-    // true - notes list of a specific folder. false - all notes
-    private boolean mIsInsideFolder;
-    // folder id for notes retrieval
-    private long mFolderId;
-    private CheckBoxesDialog mFieldsDialog;
-    // array representing the fields dialog show options
-    private boolean[] mSelectedFields;
     private DeleteDialog mDeleteNotesDialog;
-
-    //    private ListDialog mNoteSortDialog;
+    private ListDialog mSortNotesDialog;
+    private CheckBoxesDialog mFieldsDialog;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
     @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
@@ -90,22 +87,19 @@ public class NotesListActivity extends AppCompatActivity
 //        setupAd();
 
         mNotesList = new ArrayList<>();
-        mSelectedFields = new boolean[3];
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
-
-        handleIntent();
+        getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
 
         setupRecyclerView();
 
         setupViewModel();
 
         setupUI();
-
-        loadDataFromPrefs();
     }
 
     /**
      * Handle record note action
+     * Start activity for result with RecognizerIntent.ACTION_RECOGNIZE_SPEECH
      */
     @OnClick(R.id.fab_record_note)
     public void recordNote(){
@@ -121,10 +115,11 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     /**
-     * Open EditNoteActivity to add a new note
+     * Handle write new note action
+     * Navigate to EditNoteActivity
      */
     @OnClick(R.id.fab_add_note)
-    public void addNote(){
+    public void writeNote(){
         Intent intent = new Intent(NotesListActivity.this, EditNoteActivity.class);
         startActivity(intent);
     }
@@ -163,41 +158,26 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_notes_list, menu);
-        // Get the SearchView and set the searchable configuration
-        MenuItem item = menu.findItem(R.id.mi_search);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchNotes(newText);
-                return false;
-            }
-        });
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             // delete notes button
             case R.id.mi_delete_notes:
-                setupLayout(true);
+                setupDeleteLayout(true);
                 return true;
             // folder button
             case R.id.mi_folders:
                 Intent intent = new Intent(NotesListActivity.this, FoldersListActivity.class);
                 startActivity(intent);
                 return true;
-//            case R.id.mi_sort:
-//                showSortDialog();
-//                return true;
+            // reverse list order
+            case R.id.mi_swap_list:
+                reverseList();
+                return true;
+            // sort notes list by
+            case R.id.mi_sort_notes_by:
+                showSortNotesDialog();
+                return true;
+            // set notes fields to show
             case R.id.mi_note_list:
                 showFieldsDialog();
                 return true;
@@ -205,148 +185,11 @@ public class NotesListActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-//    private void showSortDialog() {
-//        if(mNoteSortDialog == null){
-//            mNoteSortDialog = new ListDialog();
-//            mNoteSortDialog.setListItemsStrings(getResources().getStringArray(R.array.fields_selection_options));
-//        }
-//        mNoteSortDialog.show(getSupportFragmentManager(), "sort_dialog");
-//    }
-
-    private void showFieldsDialog() {
-        if(mFieldsDialog == null){
-            mFieldsDialog = new CheckBoxesDialog();
-            mFieldsDialog.setCheckBoxesStrings(getResources().getStringArray(R.array.fields_selection_options));
-            mFieldsDialog.setTitle(getString(R.string.fields_dialog_title));
-        }
-        mFieldsDialog.setSelectedCheckBoxesBooleanArray(mSelectedFields);
-        mFieldsDialog.show(getSupportFragmentManager(), "fields_dialog");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result =
-                            data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    mViewModel.insertNoteByRecord(result.get(0));
-                }
-                break;
-            }
-
-        }
-    }
-
-    /**
-     * Search for notes containing the search query text
-     * @param textQuery the text query to search on
-     */
-    private void searchNotes(String textQuery) {
-        if(mSearchedNotes == null){
-            mSearchedNotes = new ArrayList<>();
-        } else {
-            mSearchedNotes.clear();
-        }
-        for(NoteEntity note : mNotesList){
-            if(note.getText().toLowerCase().contains(textQuery.toLowerCase())){
-                mSearchedNotes.add(note);
-            }
-        }
-        mNotesAdapter.setNotesList(mSearchedNotes);
-    }
-
-    /**
-     * Check for an intent extra. if there is then this activity was opened by
-     * a folder to show it's notes
-     */
-    private void handleIntent() {
-        Intent intent = getIntent();
-        if(intent != null && intent.hasExtra(FOLDER_ID_KEY)){
-            mIsInsideFolder = true;
-            mFolderId = intent.getLongExtra(FOLDER_ID_KEY, 0);
-            // set the title to the folder's name
-            setTitle(intent.getStringExtra(FOLDER_NAME_KEY));
-        } else {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-    }
-
-    /**
-     * Setup UI elements's with click listeners
-     */
-    private void setupUI() {
-        // set delete layout cancel button click event
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setupLayout(false);
-            }
-        });
-        // set delete layout delete button click event
-        mDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // delete all notes selected
-                showDeleteDialog();
-            }
-        });
-    }
-
-    private void showDeleteDialog() {
-        if(mDeleteNotesDialog == null){
-            mDeleteNotesDialog = new DeleteDialog();
-            mDeleteNotesDialog.setTitle("Delete Notes");
-        }
-        mDeleteNotesDialog.setMessage(mNotesForDeletion.size() + " notes will be deleted");
-        mDeleteNotesDialog.show(getSupportFragmentManager(), "delete_notes_dialog");
-    }
-
-    /**
-     * Setup viewModel with observer on the notes list
-     */
-    private void setupViewModel() {
-        Observer<List<NoteEntity>> observer = new Observer<List<NoteEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<NoteEntity> noteEntities) {
-                if(noteEntities != null) {
-                    mNotesAdapter.setNotesList(noteEntities);
-                    mNotesList = noteEntities;
-                    // if the list is empty then show an empty list text box
-                    if(noteEntities.size() > 0){
-                        mEmptyListMessage.setVisibility(GONE);
-                    } else {
-                        mEmptyListMessage.setVisibility(VISIBLE);
-                    }
-                }
-            }
-        };
-        // if inside a folder then load the notes by the folder's id. if not
-        // then load all the notes
-        if(mIsInsideFolder){
-            mViewModel.getNotesByFolderIdLiveData(mFolderId).observe(this, observer);
-        } else {
-            mViewModel.getNotesLiveData().observe(this, observer);
-        }
-    }
-
-    /**
-     * Setup notes list recyclerView
-     */
-    private void setupRecyclerView() {
-        mNotesAdapter = new NotesListAdapter(this, this);
-        mNotesRecyclerView.setAdapter(mNotesAdapter);
-        mNotesRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mNotesRecyclerView.setLayoutManager(layoutManager);
-    }
-
     /**
      * Setup delete layout
      * @param showLayout true - show layout. false - hide layout
      */
-    private void setupLayout(boolean showLayout) {
+    private void setupDeleteLayout(boolean showLayout) {
         if(showLayout) {
             // check if there are notes in the list. if not then toast a message
             if (mNotesAdapter.getItemCount() > 0) {
@@ -367,13 +210,116 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     /**
-     * Load data from shared preferences
+     * Reverse the notes list order
      */
-    private void loadDataFromPrefs() {
-        mSelectedFields[0] = PreferencesUtil.getShowCreationDate(this);
-        mSelectedFields[1] = PreferencesUtil.getShowLastEditDate(this);
-        mSelectedFields[2] = PreferencesUtil.getShowReminderDate(this);
-        mNotesAdapter.setSelectedFields(mSelectedFields);
+    private void reverseList() {
+        Collections.reverse(mNotesList);
+        mNotesAdapter.setNotesList(mNotesList);
+    }
+
+    /**
+     * Show sort notes by dialog
+     */
+    private void showSortNotesDialog() {
+        if(mSortNotesDialog == null){
+            mSortNotesDialog = new ListDialog();
+            mSortNotesDialog.setTitle("Sort Notes By");
+            mSortNotesDialog.setButtons("cancel", EMPTY_STRING, EMPTY_STRING);
+            mSortNotesDialog.setListItemsStrings(getResources().getStringArray(R.array.sort_notes_options));
+        }
+        mSortNotesDialog.setCheckedItem(PreferencesUtil.getSortNotesByOption(this));
+        mSortNotesDialog.show(getSupportFragmentManager(), "sort_notes_dialog");
+    }
+
+    /**
+     * Show notes fields selection dialog
+     */
+    private void showFieldsDialog() {
+        if(mFieldsDialog == null){
+            mFieldsDialog = new CheckBoxesDialog();
+            mFieldsDialog.setCheckBoxesStrings(getResources().getStringArray(R.array.fields_selection_options));
+            mFieldsDialog.setTitle(getString(R.string.fields_dialog_title));
+        }
+        mFieldsDialog.setSelectedCheckBoxesBooleanArray(PreferencesUtil.getFields(this));
+        mFieldsDialog.show(getSupportFragmentManager(), "fields_dialog");
+    }
+
+    /**
+     * Setup UI elements's with click listeners
+     */
+    private void setupUI() {
+        // set delete layout cancel button click event
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupDeleteLayout(false);
+            }
+        });
+        // set delete layout delete button click event
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // delete all notes selected
+                showDeleteDialog();
+            }
+        });
+    }
+
+    /**
+     * Show delete notes dialog
+     */
+    private void showDeleteDialog() {
+        if(mDeleteNotesDialog == null){
+            mDeleteNotesDialog = new DeleteDialog();
+            mDeleteNotesDialog.setTitle("Delete Notes");
+        }
+        mDeleteNotesDialog.setMessage(mNotesForDeletion.size() + " notes will be deleted");
+        mDeleteNotesDialog.show(getSupportFragmentManager(), "delete_notes_dialog");
+    }
+
+    /**
+     * Handle the confirm delete notes action
+     */
+    @Override
+    public void onDeleteConfirmed() {
+        mViewModel.deleteNotes(mNotesForDeletion);
+        mNotesForDeletion.clear();
+        getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
+        mNotesAdapter.notifyDataSetChanged();
+        setupDeleteLayout(false);
+    }
+
+    /**
+     * Setup viewModel with observer on the notes list
+     */
+    private void setupViewModel() {
+        mViewModel.getMutableLiveDataNotes().observe(this, new Observer<List<NoteEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<NoteEntity> noteEntities) {
+                if(noteEntities != null) {
+                    mNotesAdapter.setNotesList(noteEntities);
+                    mNotesList = noteEntities;
+                    // if the list is empty then show an empty list text box
+                    if(noteEntities.size() > 0){
+                        mEmptyListMessage.setVisibility(GONE);
+                    } else {
+                        mEmptyListMessage.setVisibility(VISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Setup notes list recyclerView
+     */
+    private void setupRecyclerView() {
+        mNotesAdapter = new NotesListAdapter(this, this);
+        mNotesAdapter.setSelectedFields(PreferencesUtil.getFields(this));
+        mNotesRecyclerView.setAdapter(mNotesAdapter);
+        mNotesRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mNotesRecyclerView.setLayoutManager(layoutManager);
     }
 
     /**
@@ -385,14 +331,95 @@ public class NotesListActivity extends AppCompatActivity
         adView.loadAd(adRequest);
     }
 
+    /**
+     * Handle notes fields selection confirm action
+     * @param selectedItems the integers array list
+     */
     @Override
     public void onConfirmSelection(ArrayList<Integer> selectedItems) {
         PreferencesUtil.setFields(this, selectedItems);
     }
 
+    /**
+     * Handle sort dialog's option selection
+     * @param whichSelected the selected item position
+     */
+    @Override
+    public void onItemSelected(int whichSelected) {
+        PreferencesUtil.setSortNotesByOption(this, whichSelected);
+    }
+
+    /**
+     * Get the sort notes by option from shared preferences
+     * @param sortOption the sore option selected: 0 -> creation date. 1 -> las edit date
+     *                   2 -> reminder date
+     */
+    private void getSortedNotes(int sortOption) {
+        if(sortOption == 0){ // creation date
+            mViewModel.loadNotesByCreationDate();
+        } else if(sortOption == 1){ // last edit date
+            mViewModel.loadNotesByLastEditDate();
+        } else if(sortOption == 2){ // reminder date
+            mViewModel.loadNotesByReminderDate();
+        } else {
+            Log.i(TAG, "sort option not recognized");
+        }
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        loadDataFromPrefs();
+        switch (key) {
+            case PREF_SORT_NOTE_BY_OPTION:
+                getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
+                break;
+            case PREF_SHOW_CREATION_DATE:
+            case PREF_SHOW_LAST_EDIT_DATE:
+            case PREF_SHOW_REMINDER_DATE:
+                mNotesAdapter.setSelectedFields(PreferencesUtil.getFields(this));
+                mNotesAdapter.notifyDataSetChanged();
+                break;
+            default:
+                Log.i(TAG, "key not recognized");
+                break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_notes_list, menu);
+        // Get the SearchView and set the searchable configuration
+        MenuItem item = menu.findItem(R.id.mi_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                mNotesAdapter.setNotesList(SearchUtils.findNotes(mNotesList, query));
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result =
+                            data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mViewModel.insertNoteByRecord(result.get(0));
+                    getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
+                }
+                break;
+            }
+
+        }
     }
 
     @Override
@@ -411,9 +438,11 @@ public class NotesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDeleteConfirmed() {
-        mViewModel.deleteNotes(mNotesForDeletion);
-        mNotesAdapter.notifyDataSetChanged();
-        setupLayout(false);
-    }
+    public void onPositiveSelected() { }
+
+    @Override
+    public void onNegativeSelected() { }
+
+    @Override
+    public void onNeutralSelected() { }
 }

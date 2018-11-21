@@ -17,44 +17,40 @@
             android:id="@+id/iv_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:layout_marginStart="@dimen/regular_horizontal_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_number_of_notes"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/folder_list_item_image_content_description"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_folder_name"
-            app:srcCompat="@mipmap/ic_filled_folder"
-            android:contentDescription="@string/folder_list_item_image_content_description"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/ic_filled_folder" />
 
         <TextView
             android:id="@+id/tv_folder_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
             android:layout_marginStart="@dimen/regular_horizontal_margin"
-            android:layout_marginTop="@dimen/regular_vertical_margin"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/iv_folder"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:noteText="Recipes" />
+            app:layout_constraintTop_toTopOf="@+id/iv_folder"
+            tools:noteText="Recipes"
+            tools:text="Trip to United states tips" />
 
         <TextView
             android:id="@+id/tv_number_of_notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/quarter_vertical_margin"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/tv_folder_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_folder_name"
-            tools:noteText="Number of notes: 5" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/regular_vertical_margin"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_number_of_notes" />
+            tools:noteText="Number of notes: 5"
+            tools:text="35 Notes" />
 
         <ImageView
             android:id="@+id/iv_delete_folder"

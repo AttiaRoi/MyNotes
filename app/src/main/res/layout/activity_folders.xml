@@ -26,11 +26,11 @@
         android:id="@+id/fab_add_folder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/regular_horizontal_margin"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="@dimen/regular_horizontal_margin"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintBottom_toTopOf="@+id/cl_delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_create_new_folder_white_24dp" />
 
@@ -48,6 +48,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_delete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:visibility="visible"
+        ads:layout_constraintBottom_toTopOf="@+id/adView"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintHorizontal_bias="1.0"
+        ads:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:string/cancel"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            ads:layout_constraintBottom_toBottomOf="@+id/btn_delete"
+            ads:layout_constraintEnd_toStartOf="@+id/btn_delete"
+            ads:layout_constraintTop_toTopOf="@+id/btn_delete" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/delete_button_vertical_margin"
+            android:layout_marginEnd="@dimen/regular_horizontal_margin"
+            android:layout_marginTop="@dimen/delete_button_vertical_margin"
+            android:text="@string/delete_notes_button"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            ads:layout_constraintBottom_toBottomOf="parent"
+            ads:layout_constraintEnd_toEndOf="parent"
+            ads:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

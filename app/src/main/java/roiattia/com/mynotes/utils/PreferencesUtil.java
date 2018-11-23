@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_CREATION_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_LAST_EDIT_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_REMINDER_DATE;
+import static roiattia.com.mynotes.utils.Constants.PREF_SORT_FOLDER_BY_OPTION;
 import static roiattia.com.mynotes.utils.Constants.PREF_SORT_NOTE_BY_OPTION;
 
 public class PreferencesUtil {
@@ -21,19 +22,9 @@ public class PreferencesUtil {
         return prefs.getInt(PREF_SORT_NOTE_BY_OPTION, 0);
     }
 
-    public static boolean getShowCreationDate(Context context) {
+    public static int getSortFoldersByOption(Context context){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean(PREF_SHOW_CREATION_DATE, false);
-    }
-
-    public static boolean getShowLastEditDate(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean(PREF_SHOW_LAST_EDIT_DATE, true);
-    }
-
-    public static boolean getShowReminderDate(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean(PREF_SHOW_REMINDER_DATE, true);
+        return prefs.getInt(PREF_SORT_FOLDER_BY_OPTION, 0);
     }
 
     public static boolean[] getFields(Context context){
@@ -67,6 +58,13 @@ public class PreferencesUtil {
     }
 
     public static void setSortNotesByOption(Context context, int option) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PREF_SORT_NOTE_BY_OPTION, option);
+        editor.apply();
+    }
+
+    public static void setSortFoldersByOption(Context context, int option) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(PREF_SORT_NOTE_BY_OPTION, option);

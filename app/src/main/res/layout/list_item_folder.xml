@@ -13,27 +13,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_folder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_folder" />
+
         <ImageView
             android:id="@+id/iv_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="@dimen/regular_horizontal_margin"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/regular_vertical_margin"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/regular_vertical_margin"
             android:contentDescription="@string/folder_list_item_image_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@mipmap/ic_filled_folder" />
+
+        <TextView
+            android:id="@+id/tv_number_of_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dates_text_size"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_folder"
+            app:layout_constraintEnd_toEndOf="@+id/iv_folder"
+            app:layout_constraintStart_toStartOf="@+id/iv_folder"
+            app:layout_constraintTop_toTopOf="@+id/iv_folder"
+            tools:text="150" />
 
         <TextView
             android:id="@+id/tv_folder_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/double_horizontal_margin"
             android:layout_marginStart="@dimen/regular_horizontal_margin"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -43,38 +67,18 @@
             tools:text="Trip to United states tips" />
 
         <TextView
-            android:id="@+id/tv_number_of_notes"
+            android:id="@+id/tv_folder_last_edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/quarter_vertical_margin"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:drawableStart="@drawable/ic_event_note_gray_14dp"
+            android:gravity="center"
+            android:textSize="@dimen/dates_text_size"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/tv_folder_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_folder_name"
-            tools:noteText="Number of notes: 5"
-            tools:text="35 Notes" />
-
-        <ImageView
-            android:id="@+id/iv_delete_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/regular_horizontal_margin"
-            android:padding="@dimen/half_horizontal_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_folder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_folder"
-            app:srcCompat="@drawable/ic_delete_accent_24dp"
-            android:contentDescription="@string/folder_list_item_delete_button_content_description"/>
-
-        <ImageView
-            android:id="@+id/iv_new_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/quarter_horizontal_margin"
-            android:padding="@dimen/half_horizontal_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_delete_folder"
-            app:layout_constraintEnd_toStartOf="@+id/iv_delete_folder"
-            app:layout_constraintTop_toTopOf="@+id/iv_delete_folder"
-            app:srcCompat="@drawable/ic_new_note_accent_24dp"
-            android:contentDescription="@string/folder_list_item_new_note_button_content_description"/>
+            tools:text="Last edited: 11/11/2018 - 08:50" />
 
     </android.support.constraint.ConstraintLayout>
 

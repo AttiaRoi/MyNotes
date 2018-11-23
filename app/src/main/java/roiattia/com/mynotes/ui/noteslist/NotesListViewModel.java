@@ -29,7 +29,7 @@ public class NotesListViewModel extends AndroidViewModel {
         mMutableLiveDataNotes = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<NoteEntity>> getMutableLiveDataNotes() {
+    public LiveData<List<NoteEntity>> getLiveDataNotes() {
         return mMutableLiveDataNotes;
     }
 

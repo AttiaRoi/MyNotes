@@ -21,6 +21,7 @@ public class Constants {
     public static final String PREF_SHOW_LAST_EDIT_DATE = "last_edit_date";
     public static final String PREF_SHOW_REMINDER_DATE = "reminder_date";
     public static final String PREF_SORT_NOTE_BY_OPTION = "sort_notes_by";
+    public static final String PREF_SORT_FOLDER_BY_OPTION = "sort_notes_by";
 
     public static final String FOLDER = "folder";
     public static final String REMINDER = "reminder";

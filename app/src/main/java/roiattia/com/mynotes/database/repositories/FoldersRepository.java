@@ -39,6 +39,23 @@ public class FoldersRepository {
         });
     }
 
+    public List<FolderListItem> getFoldersByNotesCount() {
+        return mDatabase.folderDao().getFoldersByNotesCount();
+    }
+
+    public List<FolderListItem> loadFoldersByEditDate() {
+        return mDatabase.folderDao().loadFoldersByEditDate();
+    }
+
+    public void deleteFoldersByIds(final List<Long> foldersForDeletionIds) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.folderDao().deleteFoldersByIds(foldersForDeletionIds);
+            }
+        });
+    }
+
     public interface FoldersRepositoryListener{
         void onFolderInserted(FolderEntity folder);
     }
@@ -67,11 +84,10 @@ public class FoldersRepository {
         return mDatabase.folderDao().getAllFoldersItems();
     }
 
-    public void insertFolder(final String input) {
+    public void insertFolder(final FolderEntity folder) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                FolderEntity folder = new FolderEntity(new LocalDateTime(), input);
                 mDatabase.folderDao().insertFolder(folder);
             }
         });

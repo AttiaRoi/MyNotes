@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 @Entity(tableName = "folder")
@@ -16,16 +15,16 @@ public class FolderEntity {
     private long mId;
     @ColumnInfo(name = "creation_date")
     private LocalDateTime mCreationDate;
-    @ColumnInfo(name = "last_note_inserted_date")
-    private LocalDateTime mLastNoteInsertedDate;
+    @ColumnInfo(name = "last_edited_date")
+    private LocalDateTime mLastEditedDate;
     @ColumnInfo(name = "folder_name")
     private String mName;
 
     public FolderEntity(long id, LocalDateTime creationDate,
-                        LocalDateTime lastNoteInsertedDate, String name) {
+                        LocalDateTime lastEditedDate, String name) {
         mId = id;
         mCreationDate = creationDate;
-        mLastNoteInsertedDate = lastNoteInsertedDate;
+        mLastEditedDate = lastEditedDate;
         mName = name;
     }
 
@@ -33,6 +32,13 @@ public class FolderEntity {
     public FolderEntity(LocalDateTime creationDate, String name) {
         mCreationDate = creationDate;
         mName = name;
+    }
+
+    @Ignore
+    public FolderEntity(String name, LocalDateTime creationDate, LocalDateTime lastEditedDate) {
+        mName = name;
+        mCreationDate = creationDate;
+        mLastEditedDate = lastEditedDate;
     }
 
     public long getId() {
@@ -51,12 +57,12 @@ public class FolderEntity {
         mCreationDate = creationDate;
     }
 
-    public LocalDateTime getLastNoteInsertedDate() {
-        return mLastNoteInsertedDate;
+    public LocalDateTime getLastEditedDate() {
+        return mLastEditedDate;
     }
 
-    public void setLastNoteInsertedDate(LocalDateTime lastNoteInsertedDate) {
-        mLastNoteInsertedDate = lastNoteInsertedDate;
+    public void setLastEditedDate(LocalDateTime lastEditedDate) {
+        mLastEditedDate = lastEditedDate;
     }
 
     public String getName() {

@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.noteslist.NotesListActivity"
-            android:parentActivityName=".ui.folderslist.FoldersListActivity">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,6 @@
             android:name=".ui.folderslist.FoldersListActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.noteslist.NotesListActivity" />
-
         <service
             android:name=".reminder.ReminderFireBaseJobService"
             android:exported="false">
@@ -43,7 +42,8 @@
         <activity
             android:name=".ui.FolderActivity"
             android:label="@string/title_activity_folder"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.BaseListActivity" />
     </application>
 
 </manifest>

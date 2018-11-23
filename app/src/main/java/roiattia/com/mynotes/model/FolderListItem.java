@@ -1,15 +1,27 @@
 package roiattia.com.mynotes.model;
 
+import org.joda.time.LocalDateTime;
+
 public class FolderListItem {
 
     private String mName;
     private long mId;
     private int mNotesCount;
+    private LocalDateTime mLastEditedDate;
 
-    public FolderListItem(String name, long id, int notesCount) {
+    public FolderListItem(String name, long id, int notesCount, LocalDateTime lastEditedDate) {
         mName = name;
         mId = id;
         mNotesCount = notesCount;
+        mLastEditedDate = lastEditedDate;
+    }
+
+    public LocalDateTime getLastEditedDate() {
+        return mLastEditedDate;
+    }
+
+    public void setLastEditedDate(LocalDateTime lastEditedDate) {
+        mLastEditedDate = lastEditedDate;
     }
 
     public long getId() {

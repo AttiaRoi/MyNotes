@@ -469,7 +469,7 @@ public class EditNoteActivity extends AppCompatActivity
     public void onItemSelected(int whichSelected) {
         FolderEntity folder = mFoldersList.get(whichSelected);
         // update FolderEntity with last note inserted date
-        folder.setLastNoteInsertedDate(new LocalDateTime());
+        folder.setLastEditedDate(new LocalDateTime());
         // update folder in db
         mViewModel.saveFolder(folder);
         mNote.setFolderId(folder.getId());

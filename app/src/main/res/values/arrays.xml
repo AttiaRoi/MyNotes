@@ -11,4 +11,9 @@
         <item>@string/last_edit_date</item>
         <item>@string/reminder_date</item>
     </string-array>
+
+    <string-array name="sort_folders_options">
+        <item>@string/number_of_notes</item>
+        <item>@string/last_edit_date</item>
+    </string-array>
 </resources>

@@ -22,4 +22,5 @@
     <dimen name="dialog_title_text_size">20sp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="double_horizontal_margin">32dp</dimen>
 </resources>

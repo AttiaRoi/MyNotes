@@ -11,7 +11,7 @@ import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteDao;
 import roiattia.com.mynotes.database.note.NoteEntity;
 
-@Database(entities = {NoteEntity.class, FolderEntity.class}, version = 12)
+@Database(entities = {NoteEntity.class, FolderEntity.class}, version = 13)
 @TypeConverters({DateTimeTypeConverter.class, DateTypeConverter.class, TimeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -72,8 +72,8 @@ public class NotesListActivity extends AppCompatActivity
     private CheckBoxesDialog mFieldsDialog;
 
     @BindView(R.id.rv_notes_list) RecyclerView mNotesRecyclerView;
-    @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
     @BindView(R.id.fab_add_note) FloatingActionButton mAddNoteFab;
+    @BindView(R.id.cl_delete) ConstraintLayout mDeleteLayout;
     @BindView(R.id.btn_delete) Button mDeleteButton;
     @BindView(R.id.btn_cancel) Button mCancelButton;
     @BindView(R.id.tv_empty_list) TextView mEmptyListMessage;
@@ -293,7 +293,7 @@ public class NotesListActivity extends AppCompatActivity
      * Setup viewModel with observer on the notes list
      */
     private void setupViewModel() {
-        mViewModel.getMutableLiveDataNotes().observe(this, new Observer<List<NoteEntity>>() {
+        mViewModel.getLiveDataNotes().observe(this, new Observer<List<NoteEntity>>() {
             @Override
             public void onChanged(@Nullable List<NoteEntity> noteEntities) {
                 if(noteEntities != null) {
@@ -414,7 +414,6 @@ public class NotesListActivity extends AppCompatActivity
                     ArrayList<String> result =
                             data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mViewModel.insertNoteByRecord(result.get(0));
-                    getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
                 }
                 break;
             }
@@ -427,6 +426,8 @@ public class NotesListActivity extends AppCompatActivity
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
+        setupDeleteLayout(false);
     }
 
     @Override

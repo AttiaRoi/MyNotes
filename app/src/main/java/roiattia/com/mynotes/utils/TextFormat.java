@@ -20,19 +20,8 @@ public class TextFormat {
         return "";
     }
 
-    public static String getDateStringFormat(LocalDate date){
-        if(date != null) {
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
-            return fmt.print(date);
-        }
-        return "";
-    }
-
-    public static String getTimeStringFormat(LocalTime time){
-        if(time != null) {
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("hh:mm");
-            return fmt.print(time);
-        }
-        return "";
+    public static String getStringFormatFromInt(int amount){
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        return formatter.format(amount);
     }
 }

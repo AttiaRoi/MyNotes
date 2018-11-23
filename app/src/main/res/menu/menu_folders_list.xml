@@ -6,6 +6,21 @@
         android:id="@+id/mi_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
-        app:showAsAction="ifRoom"
-        app:actionViewClass="android.widget.SearchView" />
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_delete_folders"
+        android:icon="@drawable/ic_delete"
+        android:title="Delete Folders"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_sort_folders_by"
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:title="Sort by"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_swap_list"
+        android:icon="@drawable/ic_swap_white_24dp"
+        android:title="Change order"
+        app:showAsAction="ifRoom" />
 </menu>

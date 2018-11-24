@@ -21,6 +21,24 @@ public class FoldersRepository {
     private AppDatabase mDatabase;
     private AppExecutors mExecutors;
 
+    public interface FoldersRepositoryListener{
+        void onFolderInserted(FolderEntity folder);
+    }
+
+    public static FoldersRepository getInstance(Context context) {
+        if (sInstance == null) {
+            synchronized (LOCK) {
+                sInstance = new FoldersRepository(context);
+            }
+        }
+        return sInstance;
+    }
+
+    private FoldersRepository(Context context) {
+        mDatabase = AppDatabase.getsInstance(context);
+        mExecutors = AppExecutors.getInstance();
+    }
+
     public void deleteFolderById(final long id) {
         mExecutors.diskIO().execute(new Runnable() {
             @Override
@@ -54,26 +72,6 @@ public class FoldersRepository {
                 mDatabase.folderDao().deleteFoldersByIds(foldersForDeletionIds);
             }
         });
-    }
-
-    public interface FoldersRepositoryListener{
-        void onFolderInserted(FolderEntity folder);
-    }
-
-    public static FoldersRepository getInstance(Context context) {
-        if (sInstance == null) {
-            synchronized (LOCK) {
-                sInstance = new FoldersRepository(context);
-            }
-        }
-        return sInstance;
-    }
-
-
-
-    private FoldersRepository(Context context) {
-        mDatabase = AppDatabase.getsInstance(context);
-        mExecutors = AppExecutors.getInstance();
     }
 
     public FolderEntity getFolderById(long folderId) {

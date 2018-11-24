@@ -23,4 +23,5 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="double_horizontal_margin">32dp</dimen>
+    <dimen name="date_text_padding">8dp</dimen>
 </resources>

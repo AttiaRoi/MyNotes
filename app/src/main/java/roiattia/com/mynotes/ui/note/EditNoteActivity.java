@@ -9,10 +9,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -45,6 +45,8 @@ import roiattia.com.mynotes.ui.dialogs.TextInputDialog;
 import roiattia.com.mynotes.utils.TextFormat;
 
 import static roiattia.com.mynotes.utils.Constants.FOLDER;
+import static roiattia.com.mynotes.utils.Constants.FOLDER_ID_KEY;
+import static roiattia.com.mynotes.utils.Constants.INSIDE_FOLDER_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.REMINDER;
 
@@ -74,6 +76,7 @@ public class EditNoteActivity extends AppCompatActivity
     @BindView(R.id.tv_edit_date) TextView mEditedText;
     @BindView(R.id.tv_folder_text) TextView mFolderText;
     @BindView(R.id.tv_reminder) TextView mReminderText;
+    @BindView(R.id.parent_layout) ConstraintLayout mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +102,6 @@ public class EditNoteActivity extends AppCompatActivity
         }
         mDatePickerDialog.show();
     }
-
-
 
     public void cancelReminder(){
         if(mNote.getReminderDate() != null){
@@ -139,9 +140,14 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         mReminderDateTime = mReminderDateTime.withHourOfDay(hourOfDay);
                         mReminderDateTime = mReminderDateTime.withMinuteOfHour(minute);
-                        mNote.setReminderDate(mReminderDateTime);
-                        setCardViewPanelOn(REMINDER, TextFormat.getDateTimeStringFormat(mReminderDateTime));
-                        NoteReminder.scheduleSalariesReminder(EditNoteActivity.this, mNote);
+                        if(mReminderDateTime.isAfter(new LocalDateTime())) {
+                            mNote.setReminderDate(mReminderDateTime);
+                            setCardViewPanelOn(REMINDER, TextFormat.getDateTimeStringFormat(mReminderDateTime));
+                            NoteReminder.scheduleSalariesReminder(EditNoteActivity.this, mNote);
+                        } else {
+                            Toast.makeText(EditNoteActivity.this, "Can't set reminder in past time",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }, mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE), true);
     }
@@ -166,8 +172,6 @@ public class EditNoteActivity extends AppCompatActivity
         }
         mAddToFolderDialog.show(getSupportFragmentManager(), "folders_dialog");
     }
-
-
 
     /**
      * Handle new folder confirmed dialog action
@@ -241,19 +245,31 @@ public class EditNoteActivity extends AppCompatActivity
     private void handleIntent() {
         Intent intent = getIntent();
         if(intent != null){
-            // check for note id extra
+            // check for note id extra -> edit note operation
             if(intent.hasExtra(NOTE_ID_KEY)) {
-                setTitle(getString(R.string.edit_note));
-                long noteId = intent.getLongExtra(NOTE_ID_KEY, 0);
-                mViewModel.loadNote(noteId);
-                mIsNewNote = false;
+                setupEditNoteScreen(intent.getLongExtra(NOTE_ID_KEY, 0));
             } else {
-                setupNewNote();
+                setupNewNoteScreen();
+            }
+            if(intent.hasExtra(INSIDE_FOLDER_KEY)){
+                setupInFolderScreen(intent.getLongExtra(FOLDER_ID_KEY, 0));
             }
         }
     }
 
-    private void setupNewNote() {
+    private void setupInFolderScreen(long folderId) {
+        mIsInsideFolder = true;
+        mViewModel.loadFolder(folderId);
+    }
+
+    private void setupEditNoteScreen(long noteId) {
+        setTitle(getString(R.string.edit_note));
+        mViewModel.loadNote(noteId);
+        mIsNewNote = false;
+    }
+
+    private void setupNewNoteScreen() {
+        mNoteText.requestFocus();
         mIsNewNote = true;
         setTitle(getString(R.string.new_note));
         mNote.setCreationDate(new LocalDateTime());
@@ -286,8 +302,7 @@ public class EditNoteActivity extends AppCompatActivity
                         mViewModel.loadFolder(noteItem.getFolderId());
                         setCardViewPanelOn(FOLDER, noteItem.getFolderName());
                     }
-                    mNoteText.setText(noteItem.getNoteText());
-                    loadDataToNote(noteItem);
+                    loadNoteData(noteItem);
                 }
             }
         });
@@ -296,7 +311,6 @@ public class EditNoteActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<FolderEntity> folders) {
                 if(folders != null){
-                    Log.i(TAG, "onChanged");
                     mFoldersList = folders;
                 }
             }
@@ -313,13 +327,9 @@ public class EditNoteActivity extends AppCompatActivity
         });
     }
 
-    private void loadDataToNote(NoteItem noteItem) {
-        mNote.setId(noteItem.getNoteId());
-        mNote.setFolderId(noteItem.getFolderId());
-        mNote.setText(noteItem.getNoteText());
-        mNote.setCreationDate(noteItem.getCreationDate());
-        mNote.setLastEditDate(noteItem.getLastEditDate());
-        mNote.setReminderDate(noteItem.getReminderDate());
+    private void loadNoteData(NoteItem noteItem) {
+        mNote.setNoteData(noteItem);
+        mNoteText.setText(mNote.getText());
         mCreatedText.setText(String.format("%s %s",
                 getString(R.string.created),
                 TextFormat.getDateTimeStringFormat(mNote.getCreationDate())));

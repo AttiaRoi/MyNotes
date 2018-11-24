@@ -11,8 +11,8 @@ import roiattia.com.mynotes.database.folder.FolderEntity;
 import roiattia.com.mynotes.database.note.NoteDao;
 import roiattia.com.mynotes.database.note.NoteEntity;
 
-@Database(entities = {NoteEntity.class, FolderEntity.class}, version = 13)
-@TypeConverters({DateTimeTypeConverter.class, DateTypeConverter.class, TimeTypeConverter.class})
+@Database(entities = {NoteEntity.class, FolderEntity.class}, version = 14)
+@TypeConverters({DateTimeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();

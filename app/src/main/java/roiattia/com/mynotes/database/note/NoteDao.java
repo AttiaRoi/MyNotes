@@ -13,6 +13,7 @@ import roiattia.com.mynotes.model.NoteItem;
 
 @Dao
 public interface NoteDao {
+    // boolean -> true = 1, false = 0
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNote(NoteEntity noteEntity);
@@ -27,7 +28,7 @@ public interface NoteDao {
             "note.folder_id = folder.folder_id WHERE note.note_id =:id")
     NoteItem getNoteById(long id);
 
-    @Query("SELECT * FROM note ORDER BY last_edit_date DESC")
+    @Query("SELECT * FROM note WHERE in_recycler_bin = 0 ORDER BY last_edit_date DESC")
     LiveData<List<NoteEntity>> getAllNotes();
 
     @Query("SELECT COUNT(*) FROM note")
@@ -42,12 +43,12 @@ public interface NoteDao {
     @Query("SELECT * FROM note WHERE folder_id=:folderId ORDER BY last_edit_date DESC")
     LiveData<List<NoteEntity>> getNotesByFolderId(long folderId);
 
-    @Query("SELECT * FROM note ORDER BY creation_date DESC")
+    @Query("SELECT * FROM note WHERE in_recycler_bin = 0 ORDER BY creation_date DESC")
     List<NoteEntity> getNotesByCreationDate();
 
-    @Query("SELECT * FROM note ORDER BY last_edit_date DESC")
+    @Query("SELECT * FROM note WHERE in_recycler_bin = 0 ORDER BY last_edit_date DESC")
     List<NoteEntity> getNotesByLastEditDate();
 
-    @Query("SELECT * FROM note ORDER BY reminder_date DESC")
+    @Query("SELECT * FROM note WHERE in_recycler_bin = 0 ORDER BY reminder_date DESC")
     List<NoteEntity> loadNotesByReminderDate();
 }

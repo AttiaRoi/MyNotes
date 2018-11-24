@@ -45,7 +45,7 @@ public class EditNoteViewModel extends AndroidViewModel {
         });
     }
 
-    public MutableLiveData<FolderEntity> getMutableLiveFolder() {
+    public LiveData<FolderEntity> getMutableLiveFolder() {
         return mMutableLiveFolder;
     }
 
@@ -59,7 +59,7 @@ public class EditNoteViewModel extends AndroidViewModel {
         });
     }
 
-    public MutableLiveData<NoteItem> getMutableLiveNote(){
+    public LiveData<NoteItem> getMutableLiveNote(){
         return mMutableLiveNote;
     }
 

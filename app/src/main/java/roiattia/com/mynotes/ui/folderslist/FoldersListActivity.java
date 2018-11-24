@@ -58,13 +58,18 @@ public class FoldersListActivity extends AppCompatActivity
 
     private FoldersListAdapter mFoldersAdapter;
     private FoldersListViewModel mViewModel;
-    private TextInputDialog mAddFolderDialog;
-    private DeleteDialog mDeleteFoldersDialog;
-    private ListDialog mSortFoldersDialog;
-    // All folders in the db
+    // all folders in the db
     private List<FolderListItem> mFolderListItems;
+    // save the ids of the folders checked for deletion
     private List<Long> mFoldersForDeletionIds;
+    // save the overall notes count that will get deleted
     private int mNotesForDeletionCount;
+    // new folder dialog
+    private TextInputDialog mAddFolderDialog;
+    // delete folders dialog
+    private DeleteDialog mDeleteFoldersDialog;
+    // sort folders dialog
+    private ListDialog mSortFoldersDialog;
 
     @BindView(R.id.rv_folders) RecyclerView mFoldersRecyclerView;
     @BindView(R.id.tv_empty_list) TextView mEmptyListMessage;
@@ -330,7 +335,7 @@ public class FoldersListActivity extends AppCompatActivity
             }
         });
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_folders_list, menu);

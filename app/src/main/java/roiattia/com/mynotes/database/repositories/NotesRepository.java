@@ -83,4 +83,13 @@ public class NotesRepository {
     public List<NoteEntity> loadNotesByReminderDate() {
         return mDatabase.noteDao().loadNotesByReminderDate();
     }
+
+    public void insertNotes(final List<NoteEntity> firstSetupNotes) {
+        mExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase.noteDao().insertAllNotes(firstSetupNotes);
+            }
+        });
+    }
 }

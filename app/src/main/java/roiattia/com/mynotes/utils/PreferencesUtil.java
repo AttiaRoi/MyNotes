@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 
+import static roiattia.com.mynotes.utils.Constants.PREF_FIRST_NOTE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_CREATION_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_LAST_EDIT_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_REMINDER_DATE;
@@ -16,6 +17,11 @@ public class PreferencesUtil {
 
 
     private PreferencesUtil(){ }
+
+    public static boolean getFirstNoteInserted(Context context){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(PREF_FIRST_NOTE, false);
+    }
 
     public static int getSortNotesByOption(Context context){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -34,6 +40,13 @@ public class PreferencesUtil {
         selectedFields[1] = prefs.getBoolean(PREF_SHOW_LAST_EDIT_DATE, true);
         selectedFields[2] = prefs.getBoolean(PREF_SHOW_REMINDER_DATE, true);
         return selectedFields;
+    }
+
+    public static void setFirstNoteInserted(Context context){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PREF_FIRST_NOTE, true);
+        editor.apply();
     }
 
     public static void setFields(Context context, ArrayList<Integer> selectedItems) {

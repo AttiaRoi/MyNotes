@@ -10,11 +10,16 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import roiattia.com.mynotes.database.AppExecutors;
+import roiattia.com.mynotes.database.folder.FolderEntity;
+import roiattia.com.mynotes.database.repositories.FoldersRepository;
 import roiattia.com.mynotes.database.repositories.NotesRepository;
 import roiattia.com.mynotes.database.note.NoteEntity;
+
+import static roiattia.com.mynotes.utils.Constants.RECYCLE_BIN;
 
 public class NotesListViewModel extends AndroidViewModel {
 
@@ -78,6 +83,20 @@ public class NotesListViewModel extends AndroidViewModel {
                 mMutableLiveDataNotes.postValue(notes);
             }
         });
+    }
+
+    public void setupFirstTimeSetup() {
+        NoteEntity firstNote = new NoteEntity(new LocalDateTime(), new LocalDateTime(),
+                "This is an example note. enjoy this app :)");
+        NoteEntity deleteNote = new NoteEntity(new LocalDateTime(), new LocalDateTime(),
+                "This is an example deleted note. all deleted notes will be saved in " +
+                        "the recycler bin for you to recover or to delete entirely");
+        deleteNote.setId(9999);
+        deleteNote.setInRecyclerBin(true);
+        List<NoteEntity> firstSetupNotes = new ArrayList<>();
+        firstSetupNotes.add(firstNote);
+        firstSetupNotes.add(deleteNote);
+        mNotesRepository.insertNotes(firstSetupNotes);
     }
 
     /***********************************************************************************************

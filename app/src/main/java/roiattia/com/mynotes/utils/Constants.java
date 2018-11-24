@@ -3,9 +3,12 @@ package roiattia.com.mynotes.utils;
 public class Constants {
 
     public static final String NOTE_ID_KEY = "note_id_key";
+    public static final String INSIDE_FOLDER_KEY = "inside_folder_key";
+    public static final String NEW_NOTE_KEY = "new_note_key";
+    
     public static final String FOLDER_ID_KEY = "folder_id_key";
     public static final String FOLDER_NAME_KEY = "folder_name_key";
-    public static final String INSIDE_FOLDER = "inside_folder";
+    
     public static final int REQ_CODE_SPEECH_INPUT = 100;
     // Notifications
     public static final String NOTE_REMINDER_NOTIFICATION_CHANNEL_ID = "channel_id";
@@ -22,16 +25,16 @@ public class Constants {
     public static final String PREF_SHOW_REMINDER_DATE = "reminder_date";
     public static final String PREF_SORT_NOTE_BY_OPTION = "sort_notes_by";
     public static final String PREF_SORT_FOLDER_BY_OPTION = "sort_notes_by";
+    public static final String PREF_FIRST_NOTE = "first_time_open";
 
     public static final String FOLDER = "folder";
     public static final String REMINDER = "reminder";
 
     public static final String EMPTY_STRING = "empty_string";
+    public static final String RECYCLE_BIN = "recycle_bin";
 
 }
 
-
-//TODO: add show by function
 //TODO: add settings activity
 //TODO: translation
 //TODO: ads

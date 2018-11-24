@@ -38,6 +38,16 @@
     <string name="dialog_confirm">confirm</string>
     <string name="dialog_cancel">cancel</string>
     <string name="new_folder_dialog_example_17">Enter folder name</string>
+    <string name="created">Created:</string>
+    <string name="edited">Edited:</string>
+    <string name="add_reminder_text">Add reminder</string>
+    <string name="enter_note_text_hint">Enter note text</string>
+    <string name="note_removed_from_folder_toast">Note removed from folder</string>
+    <string name="note_not_in_folder_toast">Note not in any folder</string>
+    <string name="reminder_canceled_toast">Reminder canceled</string>
+    <string name="reminder_not_set_toast">Reminder not set for this note</string>
+    <string name="add_note_to_folder_dialog_title">Add Note To Folder</string>
+
 
     <!-- FoldersListActivity -->
     <string name="folder_activity_title">My Folders</string>
@@ -53,20 +63,11 @@
     <string name="folder_list_item_delete_button_content_description">folder list item delete button</string>
     <string name="folder_list_item_new_note_button_content_description">folder list item new note button</string>
 
-    <string name="enter_note_text_hint">Enter note text</string>
-    <string name="note_removed_from_folder_toast">Note removed from folder</string>
-    <string name="note_not_in_folder_toast">Note not in any folder</string>
-    <string name="reminder_canceled_toast">Reminder canceled</string>
-    <string name="reminder_not_set_toast">Reminder not set for this note</string>
+
     <string name="date_picker_dialog_remove">remove</string>
-    <string name="created">Created:</string>
-    <string name="edited">Edited:</string>
-    <string name="add_reminder_text">Add reminder</string>
-    <string name="add_note_to_folder_dialog_title">Add Note To Folder</string>
     <string name="create_new_folder_dialog_title">Create New Folder</string>
     <string name="title_activity_folder">FolderActivity</string>
     <string name="action_settings">Settings</string>
-
     <string name="number_of_notes">Notes count</string>
 
 

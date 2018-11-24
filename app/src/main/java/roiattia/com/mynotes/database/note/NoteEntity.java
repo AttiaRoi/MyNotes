@@ -9,6 +9,7 @@ import android.arch.persistence.room.PrimaryKey;
 import org.joda.time.LocalDateTime;
 
 import roiattia.com.mynotes.database.folder.FolderEntity;
+import roiattia.com.mynotes.model.NoteItem;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -32,19 +33,23 @@ public class NoteEntity {
     private String mText;
     @ColumnInfo(name = "reminder_date")
     private LocalDateTime mReminderDate;
-
-    @Ignore
-    public NoteEntity() { }
+    @ColumnInfo(name = "in_recycler_bin")
+    private boolean mInRecyclerBin;
 
     public NoteEntity(long id, Long folderId, LocalDateTime creationDate, LocalDateTime lastEditDate,
-                      String text, LocalDateTime reminderDate) {
+                      String text, LocalDateTime reminderDate, boolean inRecyclerBin) {
         mId = id;
         mFolderId = folderId;
         mCreationDate = creationDate;
         mLastEditDate = lastEditDate;
         mText = text;
         mReminderDate = reminderDate;
+        mInRecyclerBin = inRecyclerBin;
     }
+
+    @Ignore
+    public NoteEntity() { }
+
 
     @Ignore
     public NoteEntity(LocalDateTime dateTime, String text) {
@@ -69,6 +74,14 @@ public class NoteEntity {
                 ", mText='" + mText + '\'' +
                 ", mReminderDate=" + mReminderDate +
                 '}';
+    }
+
+    public boolean isInRecyclerBin() {
+        return mInRecyclerBin;
+    }
+
+    public void setInRecyclerBin(boolean inRecyclerBin) {
+        mInRecyclerBin = inRecyclerBin;
     }
 
     public long getId() {
@@ -117,5 +130,14 @@ public class NoteEntity {
 
     public void setReminderDate(LocalDateTime reminderDate) {
         mReminderDate = reminderDate;
+    }
+
+    public void setNoteData(NoteItem noteItem) {
+        mId = noteItem.getNoteId();
+        mFolderId = noteItem.getFolderId();
+        mText = noteItem.getNoteText();
+        mCreationDate = noteItem.getCreationDate();
+        mLastEditDate = noteItem.getLastEditDate();
+        mReminderDate = noteItem.getReminderDate();
     }
 }

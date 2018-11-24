@@ -42,6 +42,15 @@
     <string name="note_is_empty_toast_message">הפתק ריק…</string>
     <string name="add_note_to_folder_text">הוספת הפתק לתיקייה</string>
     <string name="folder_name_required_toast_message">חסר שם לתיקייה</string>
+    <string name="created">נוצר:</string>
+    <string name="edited">נערך:</string>
+    <string name="add_reminder_text">הוספת תזכורת</string>
+    <string name="enter_note_text_hint">הקלידו מלל לפתק</string>
+    <string name="note_removed_from_folder_toast">פתק הוסר מהתיקייה</string>
+    <string name="note_not_in_folder_toast">הפתק לא נמצא בתיקייה</string>
+    <string name="reminder_canceled_toast">תזכורת בוטלה</string>
+    <string name="reminder_not_set_toast">אין תזכורת לפתק</string>
+    <string name="add_note_to_folder_dialog_title">הוספת הפתק לתיקייה</string>
 
     <!-- FoldersListActivity -->
     <string name="folder_activity_title">התיקיות שלי</string>

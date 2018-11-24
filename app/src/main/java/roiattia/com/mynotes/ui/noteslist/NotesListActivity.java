@@ -47,6 +47,7 @@ import roiattia.com.mynotes.utils.SearchUtils;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static roiattia.com.mynotes.utils.Constants.EMPTY_STRING;
+import static roiattia.com.mynotes.utils.Constants.NEW_NOTE_KEY;
 import static roiattia.com.mynotes.utils.Constants.NOTE_ID_KEY;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_CREATION_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_LAST_EDIT_DATE;
@@ -83,7 +84,6 @@ public class NotesListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes_list);
         ButterKnife.bind(this);
-
 //        setupAd();
 
         mNotesList = new ArrayList<>();
@@ -426,6 +426,10 @@ public class NotesListActivity extends AppCompatActivity
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        if(!PreferencesUtil.getFirstNoteInserted(this)){
+            mViewModel.setupFirstTimeSetup();
+            PreferencesUtil.setFirstNoteInserted(this);
+        }
         getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
         setupDeleteLayout(false);
     }

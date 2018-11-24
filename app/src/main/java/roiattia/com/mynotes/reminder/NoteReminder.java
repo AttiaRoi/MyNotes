@@ -2,6 +2,8 @@ package roiattia.com.mynotes.reminder;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -22,6 +24,7 @@ import static roiattia.com.mynotes.utils.Constants.NOTE_TEXT_EXTRA;
 public class NoteReminder {
 
     private static final int SYNC_FLEXTIME_SECONDS = (int) TimeUnit.SECONDS.toSeconds(30);
+    private static final String TAG = NoteReminder.class.getSimpleName();
 
     synchronized public static void scheduleSalariesReminder(
             Context context, NoteEntity note){

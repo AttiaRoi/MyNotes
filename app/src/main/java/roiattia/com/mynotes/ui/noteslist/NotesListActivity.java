@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import roiattia.com.mynotes.R;
 import roiattia.com.mynotes.database.note.NoteEntity;
+import roiattia.com.mynotes.ui.NotesListBaseActivity;
 import roiattia.com.mynotes.ui.dialogs.CheckBoxesDialog;
 import roiattia.com.mynotes.ui.dialogs.DeleteDialog;
 import roiattia.com.mynotes.ui.dialogs.ListDialog;
@@ -55,14 +56,14 @@ import static roiattia.com.mynotes.utils.Constants.PREF_SHOW_REMINDER_DATE;
 import static roiattia.com.mynotes.utils.Constants.PREF_SORT_NOTE_BY_OPTION;
 import static roiattia.com.mynotes.utils.Constants.REQ_CODE_SPEECH_INPUT;
 
-public class NotesListActivity extends AppCompatActivity
+public class NotesListActivity extends NotesListBaseActivity
     implements NotesListAdapter.OnNoteClick, CheckBoxesDialog.CheckBoxesDialogListener,
     SharedPreferences.OnSharedPreferenceChangeListener,
     DeleteDialog.DeleteDialogListener, ListDialog.ListDialogListener{
 
     private static final String TAG = NotesListActivity.class.getSimpleName();
 
-    private NotesListAdapter mNotesAdapter;
+//    private NotesListAdapter mNotesAdapter;
     private NotesListViewModel mViewModel;
     // the entire notes list
     private List<NoteEntity> mNotesList;
@@ -80,17 +81,22 @@ public class NotesListActivity extends AppCompatActivity
     @BindView(R.id.tv_empty_list) TextView mEmptyListMessage;
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.activity_notes_list;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes_list);
-        ButterKnife.bind(this);
+//        setContentView(R.layout.activity_notes_list);
+//        ButterKnife.bind(this);
 //        setupAd();
 
         mNotesList = new ArrayList<>();
         mViewModel = ViewModelProviders.of(this).get(NotesListViewModel.class);
         getSortedNotes(PreferencesUtil.getSortNotesByOption(this));
 
-        setupRecyclerView();
+//        setupRecyclerView();
 
         setupViewModel();
 
@@ -313,14 +319,14 @@ public class NotesListActivity extends AppCompatActivity
     /**
      * Setup notes list recyclerView
      */
-    private void setupRecyclerView() {
-        mNotesAdapter = new NotesListAdapter(this, this);
-        mNotesAdapter.setSelectedFields(PreferencesUtil.getFields(this));
-        mNotesRecyclerView.setAdapter(mNotesAdapter);
-        mNotesRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mNotesRecyclerView.setLayoutManager(layoutManager);
-    }
+//    private void setupRecyclerView() {
+//        mNotesAdapter = new NotesListAdapter(this, this);
+//        mNotesAdapter.setSelectedFields(PreferencesUtil.getFields(this));
+//        mNotesRecyclerView.setAdapter(mNotesAdapter);
+//        mNotesRecyclerView.setHasFixedSize(true);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        mNotesRecyclerView.setLayoutManager(layoutManager);
+//    }
 
     /**
      * Load ad
